@@ -1,8 +1,8 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from uuid import uuid4
 
 
-class BaseEntity(ABC):
+class base_entity(ABC):
     """Базовый класс для доменных сущностей."""
 
     def __init__(self):
