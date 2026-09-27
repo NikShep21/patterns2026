@@ -1,9 +1,13 @@
 from abc import ABC
 from uuid import uuid4
 
+from Src.Core.Exceptions import validation_error
+
 
 class base_entity(ABC):
     """Базовый класс для доменных сущностей."""
+
+    _max_name_length = 50
 
     def __init__(self):
         """Инициализирует базовую сущность."""
@@ -24,7 +28,17 @@ class base_entity(ABC):
     @name.setter
     def name(self, value: str):
         """Изменяет наименование сущности."""
-        if not value or not value.strip():
-            raise ValueError("Имя не может быть пустым")
+        if not isinstance(value, str):
+            raise validation_error("Наименование должно иметь строковый тип")
 
-        self.__name = value.strip()
+        if not value.strip():
+            raise validation_error("Наименование не может быть пустым")
+
+        value = value.strip()
+
+        if len(value) > self._max_name_length:
+            raise validation_error(
+                f"Наименование не может быть длиннее {self._max_name_length} символов"
+            )
+
+        self.__name = value
