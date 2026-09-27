@@ -22,7 +22,6 @@ class base_entity(ABC):
     @property
     def name(self) -> str:
         """Возвращает наименование сущности."""
-
         return self.__name
 
     @name.setter
@@ -31,10 +30,10 @@ class base_entity(ABC):
         if not isinstance(value, str):
             raise validation_error("Наименование должно иметь строковый тип")
 
-        if not value.strip():
-            raise validation_error("Наименование не может быть пустым")
-
         value = value.strip()
+
+        if not value:
+            raise validation_error("Наименование не может быть пустым")
 
         if len(value) > self._max_name_length:
             raise validation_error(
