@@ -1,9 +1,13 @@
 from abc import ABC
 from uuid import uuid4
 
+from Src.Core.Validator import validator
+
 
 class base_entity(ABC):
     """Базовый класс для доменных сущностей."""
+
+    _max_name_length = 50
 
     def __init__(self):
         """Инициализирует базовую сущность."""
@@ -18,13 +22,21 @@ class base_entity(ABC):
     @property
     def name(self) -> str:
         """Возвращает наименование сущности."""
-
         return self.__name
 
     @name.setter
     def name(self, value: str):
         """Изменяет наименование сущности."""
-        if not value or not value.strip():
-            raise ValueError("Имя не может быть пустым")
-
+        validator.validate_required_string(
+            value,
+            "Наименование",
+            self._max_name_length,
+        )
         self.__name = value.strip()
+
+    def __eq__(self, other) -> bool:
+        """Сравнивает сущности по уникальному идентификатору."""
+        if not isinstance(other, base_entity):
+            return NotImplemented
+
+        return self.id == other.id
