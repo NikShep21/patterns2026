@@ -1,5 +1,5 @@
 from Src.Core.Abstract import base_entity
-from Src.Core.Exceptions import validation_error
+from Src.Core.Validator import validator
 from Src.Models.nomenclature_group_model import nomenclature_group_model
 from Src.Models.range_model import range_model
 
@@ -31,23 +31,12 @@ class nomenclature_model(base_entity):
     @full_name.setter
     def full_name(self, value: str):
         """Изменяет полное наименование номенклатуры."""
-        if not isinstance(value, str):
-            raise validation_error(
-                "Полное наименование должно иметь строковый тип"
-            )
-
-        value = value.strip()
-
-        if not value:
-            raise validation_error("Полное наименование не может быть пустым")
-
-        if len(value) > self._max_full_name_length:
-            raise validation_error(
-                "Полное наименование не может быть длиннее "
-                f"{self._max_full_name_length} символов"
-            )
-
-        self.__full_name = value
+        validator.validate_required_string(
+            value,
+            "Полное наименование",
+            self._max_full_name_length,
+        )
+        self.__full_name = value.strip()
 
     @property
     def group(self) -> nomenclature_group_model:
@@ -57,11 +46,7 @@ class nomenclature_model(base_entity):
     @group.setter
     def group(self, value: nomenclature_group_model):
         """Изменяет группу номенклатуры."""
-        if not isinstance(value, nomenclature_group_model):
-            raise validation_error(
-                "Группа должна иметь тип nomenclature_group_model"
-            )
-
+        validator.validate_type(value, nomenclature_group_model, "Группа")
         self.__group = value
 
     @property
@@ -72,9 +57,5 @@ class nomenclature_model(base_entity):
     @range.setter
     def range(self, value: range_model):
         """Изменяет единицу измерения номенклатуры."""
-        if not isinstance(value, range_model):
-            raise validation_error(
-                "Единица измерения должна иметь тип range_model"
-            )
-
+        validator.validate_type(value, range_model, "Единица измерения")
         self.__range = value

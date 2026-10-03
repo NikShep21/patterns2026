@@ -18,7 +18,8 @@ def test_success_init_valid_inn_returns_created_organization(inn):
         "Ромашка",
         inn,
         "042520607",
-        "40702810000000000001",
+        "40702810001",
+        "30101810001",
         "ООО",
     )
 
@@ -26,7 +27,8 @@ def test_success_init_valid_inn_returns_created_organization(inn):
     assert organization.name == "Ромашка"
     assert organization.inn == inn
     assert organization.bik == "042520607"
-    assert organization.account == "40702810000000000001"
+    assert organization.account == "40702810001"
+    assert organization.corr_account == "30101810001"
     assert organization.ownership_form == "ООО"
 
 
@@ -39,7 +41,8 @@ def test_success_ownership_form_outer_spaces_returns_trimmed_value():
         "Ромашка",
         "3801000000",
         "042520607",
-        "40702810000000000001",
+        "40702810001",
+        "30101810001",
         "  ООО  ",
     )
 
@@ -62,7 +65,8 @@ def test_fail_inn_invalid_value_raises_validation_error(invalid_inn):
             "Ромашка",
             invalid_inn,
             "042520607",
-            "40702810000000000001",
+            "40702810001",
+            "30101810001",
             "ООО",
         )
 
@@ -82,14 +86,15 @@ def test_fail_bik_invalid_value_raises_validation_error(invalid_bik):
             "Ромашка",
             "3801000000",
             invalid_bik,
-            "40702810000000000001",
+            "40702810001",
+            "30101810001",
             "ООО",
         )
 
 
 @pytest.mark.parametrize(
     "invalid_account",
-    ("4070281000000000000A", "4070281000000000000"),
+    ("4070281000A", "4070281000"),
     ids=("non-digit", "wrong-length"),
 )
 def test_fail_account_invalid_value_raises_validation_error(invalid_account):
@@ -103,6 +108,30 @@ def test_fail_account_invalid_value_raises_validation_error(invalid_account):
             "3801000000",
             "042520607",
             invalid_account,
+            "30101810001",
+            "ООО",
+        )
+
+
+@pytest.mark.parametrize(
+    "invalid_corr_account",
+    ("3010181000A", "3010181000"),
+    ids=("non-digit", "wrong-length"),
+)
+def test_fail_corr_account_invalid_value_raises_validation_error(
+    invalid_corr_account,
+):
+    """
+    Некорректный корреспондентский счёт вызывает ошибку валидации.
+    """
+    # Act / Assert
+    with pytest.raises(validation_error):
+        organization_model(
+            "Ромашка",
+            "3801000000",
+            "042520607",
+            "40702810001",
+            invalid_corr_account,
             "ООО",
         )
 
@@ -124,6 +153,7 @@ def test_fail_ownership_form_invalid_value_raises_validation_error(
             "Ромашка",
             "3801000000",
             "042520607",
-            "40702810000000000001",
+            "40702810001",
+            "30101810001",
             invalid_ownership_form,
         )

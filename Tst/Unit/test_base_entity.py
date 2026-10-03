@@ -1,3 +1,5 @@
+from copy import copy
+
 import pytest
 
 from Src.Core.Abstract import base_entity
@@ -26,6 +28,30 @@ def test_success_init_two_entities_returns_unique_ids():
 
     # Assert
     assert first_entity.id != second_entity.id
+
+
+def test_success_equal_ids_returns_equal_entities():
+    """
+    Сущности с одинаковым идентификатором считаются равными.
+    """
+    # Arrange
+    entity = base_entity()
+    entity_copy = copy(entity)
+
+    # Act / Assert
+    assert entity == entity_copy
+
+
+def test_success_different_ids_returns_unequal_entities():
+    """
+    Сущности с разными идентификаторами считаются неравными.
+    """
+    # Arrange
+    first_entity = base_entity()
+    second_entity = base_entity()
+
+    # Act / Assert
+    assert first_entity != second_entity
 
 
 def test_success_name_outer_spaces_returns_trimmed_value():

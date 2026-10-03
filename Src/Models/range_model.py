@@ -1,5 +1,6 @@
 from Src.Core.Abstract import base_entity
 from Src.Core.Exceptions import validation_error
+from Src.Core.Validator import validator
 
 
 class range_model(base_entity):
@@ -41,9 +42,5 @@ class range_model(base_entity):
     @base_range.setter
     def base_range(self, value: "range_model"):
         """Изменяет базовую единицу измерения."""
-        if not isinstance(value, range_model):
-            raise validation_error(
-                "Базовая единица должна иметь тип range_model"
-            )
-
+        validator.validate_type(value, range_model, "Базовая единица")
         self.__base_range = value

@@ -1,7 +1,7 @@
 from abc import ABC
 from uuid import uuid4
 
-from Src.Core.Exceptions import validation_error
+from Src.Core.Validator import validator
 
 
 class base_entity(ABC):
@@ -27,17 +27,16 @@ class base_entity(ABC):
     @name.setter
     def name(self, value: str):
         """Изменяет наименование сущности."""
-        if not isinstance(value, str):
-            raise validation_error("Наименование должно иметь строковый тип")
+        validator.validate_required_string(
+            value,
+            "Наименование",
+            self._max_name_length,
+        )
+        self.__name = value.strip()
 
-        value = value.strip()
+    def __eq__(self, other) -> bool:
+        """Сравнивает сущности по уникальному идентификатору."""
+        if not isinstance(other, base_entity):
+            return NotImplemented
 
-        if not value:
-            raise validation_error("Наименование не может быть пустым")
-
-        if len(value) > self._max_name_length:
-            raise validation_error(
-                f"Наименование не может быть длиннее {self._max_name_length} символов"
-            )
-
-        self.__name = value
+        return self.id == other.id

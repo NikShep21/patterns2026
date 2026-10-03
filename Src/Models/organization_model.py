@@ -1,5 +1,5 @@
 from Src.Core.Abstract import base_entity
-from Src.Core.Exceptions import validation_error
+from Src.Core.Validator import validator
 
 
 class organization_model(base_entity):
@@ -11,6 +11,7 @@ class organization_model(base_entity):
         inn: str,
         bik: str,
         account: str,
+        corr_account: str,
         ownership_form: str,
     ):
         """Инициализирует организацию."""
@@ -19,49 +20,8 @@ class organization_model(base_entity):
         self.inn = inn
         self.bik = bik
         self.account = account
+        self.corr_account = corr_account
         self.ownership_form = ownership_form
-
-    @staticmethod
-    def _normalize_required_string(value: str, field_name: str) -> str:
-        """Проверяет и нормализует обязательное строковое поле."""
-        if not isinstance(value, str):
-            raise validation_error(
-                f"Поле «{field_name}» должно иметь строковый тип"
-            )
-
-        value = value.strip()
-
-        if not value:
-            raise validation_error(f"Поле «{field_name}» не может быть пустым")
-
-        return value
-
-    @staticmethod
-    def _normalize_numeric_string(
-        value: str,
-        field_name: str,
-        allowed_lengths: tuple[int, ...],
-    ) -> str:
-        """Проверяет и нормализует обязательное цифровое поле."""
-        value = organization_model._normalize_required_string(
-            value,
-            field_name,
-        )
-
-        if not value.isascii() or not value.isdigit():
-            raise validation_error(
-                f"Поле «{field_name}» должно содержать только цифры"
-            )
-
-        if len(value) not in allowed_lengths:
-            expected_lengths = " или ".join(
-                str(length) for length in allowed_lengths
-            )
-            raise validation_error(
-                f"Поле «{field_name}» должно содержать {expected_lengths} цифр"
-            )
-
-        return value
 
     @property
     def inn(self) -> str:
@@ -71,7 +31,8 @@ class organization_model(base_entity):
     @inn.setter
     def inn(self, value: str):
         """Изменяет ИНН организации."""
-        self.__inn = self._normalize_numeric_string(value, "ИНН", (10, 12))
+        validator.validate_numeric_string(value, "ИНН", (10, 12))
+        self.__inn = value.strip()
 
     @property
     def bik(self) -> str:
@@ -81,7 +42,8 @@ class organization_model(base_entity):
     @bik.setter
     def bik(self, value: str):
         """Изменяет БИК организации."""
-        self.__bik = self._normalize_numeric_string(value, "БИК", (9,))
+        validator.validate_numeric_string(value, "БИК", (9,))
+        self.__bik = value.strip()
 
     @property
     def account(self) -> str:
@@ -91,7 +53,23 @@ class organization_model(base_entity):
     @account.setter
     def account(self, value: str):
         """Изменяет номер счёта организации."""
-        self.__account = self._normalize_numeric_string(value, "Счёт", (20,))
+        validator.validate_numeric_string(value, "Счёт", (11,))
+        self.__account = value.strip()
+
+    @property
+    def corr_account(self) -> str:
+        """Возвращает корреспондентский счёт банка."""
+        return self.__corr_account
+
+    @corr_account.setter
+    def corr_account(self, value: str):
+        """Изменяет корреспондентский счёт банка."""
+        validator.validate_numeric_string(
+            value,
+            "Корреспондентский счёт",
+            (11,),
+        )
+        self.__corr_account = value.strip()
 
     @property
     def ownership_form(self) -> str:
@@ -101,7 +79,8 @@ class organization_model(base_entity):
     @ownership_form.setter
     def ownership_form(self, value: str):
         """Изменяет форму собственности организации."""
-        self.__ownership_form = self._normalize_required_string(
+        validator.validate_required_string(
             value,
             "Форма собственности",
         )
+        self.__ownership_form = value.strip()
