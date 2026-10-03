@@ -9,6 +9,7 @@ class settings_model(base_entity):
     __organization: organization_model = None
     __boss_name: str = ""
     __accountant_name: str = ""
+    __is_first_start: bool = False
 
     @property
     def organization(self) -> organization_model:
@@ -42,3 +43,14 @@ class settings_model(base_entity):
         """Изменяет наименование главного бухгалтера."""
         validator.validate_required_string(value, "Главный бухгалтер", 255)
         self.__accountant_name = value.strip()
+
+    @property
+    def is_first_start(self) -> bool:
+        """Возвращает признак первого запуска приложения."""
+        return self.__is_first_start
+
+    @is_first_start.setter
+    def is_first_start(self, value: bool) -> None:
+        """Изменяет признак первого запуска приложения."""
+        validator.validate_type(value, bool, "Первый запуск")
+        self.__is_first_start = value

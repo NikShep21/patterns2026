@@ -8,5 +8,6 @@
     "ownership_form": "ООО"
   },
   "boss_name": "Иванов И. И.",
-  "accountant_name": "Семёнов А. Г."
+  "accountant_name": "Семёнов А. Г.",
+  "is_first_start": true
 }

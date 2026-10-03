@@ -34,6 +34,7 @@ class settings_manager(abstract_manager):
         """Загружает настройки из файла."""
         validator.validate_type(file_name, str, "Имя файла")
         self._file_name = file_name.strip() or self.__default_file_name
+        self._is_loaded = False
 
         try:
             with open(self._file_name, "r", encoding="utf-8") as file:
@@ -68,6 +69,7 @@ class settings_manager(abstract_manager):
         settings.organization = organization
         settings.boss_name = self._data["boss_name"]
         settings.accountant_name = self._data["accountant_name"]
+        settings.is_first_start = self._data["is_first_start"]
         self.__settings = settings
 
         return True
