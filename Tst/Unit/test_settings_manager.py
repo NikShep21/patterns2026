@@ -108,6 +108,37 @@ def test_success_settings_manager_converts_all_fields():
     assert settings.accountant_name == "Семёнов А. Г."
 
 
+def test_success_settings_manager_loads_without_inn(monkeypatch):
+    """Проверяет загрузку настроек без ИНН организации."""
+    # Подготовка
+    manager = settings_manager()
+    data = {
+        "organization": {
+            "name": "ООО Ромашка",
+            "bik": "044525225",
+            "account": "40702810900",
+            "corr_account": "30101810400",
+            "ownership_form": "ООО",
+        },
+        "boss_name": "Иванов И. И.",
+        "accountant_name": "Семёнов А. Г.",
+        "is_first_start": True,
+    }
+    monkeypatch.setattr(
+        "builtins.open",
+        lambda *args, **kwargs: StringIO(
+            json.dumps(data, ensure_ascii=False)
+        ),
+    )
+
+    # Действие
+    manager.load("settings-without-inn.json")
+
+    # Проверка
+    assert manager.is_loaded is True
+    assert manager.settings.organization.inn == ""
+
+
 def test_fail_settings_manager_missing_file_raises_operation_error(monkeypatch):
     """Проверяет ошибку при отсутствии файла настроек."""
     # Подготовка

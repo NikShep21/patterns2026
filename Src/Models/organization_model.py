@@ -8,7 +8,7 @@ class organization_model(base_entity):
     def __init__(
         self,
         name: str,
-        inn: str,
+        inn: str | None,
         bik: str,
         account: str,
         corr_account: str,
@@ -16,8 +16,12 @@ class organization_model(base_entity):
     ):
         """Инициализирует организацию."""
         super().__init__()
+        self.__inn = ""
         self.name = name
-        self.inn = inn
+
+        if inn is not None:
+            self.inn = inn
+
         self.bik = bik
         self.account = account
         self.corr_account = corr_account

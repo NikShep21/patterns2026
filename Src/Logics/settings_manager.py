@@ -58,7 +58,7 @@ class settings_manager(abstract_manager):
 
         organization = organization_model(
             organization_data["name"],
-            organization_data["inn"],
+            organization_data.get("inn"),
             organization_data["bik"],
             organization_data["account"],
             organization_data["corr_account"],
