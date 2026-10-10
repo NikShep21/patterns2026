@@ -1,3 +1,5 @@
+from math import isfinite
+
 from Src.Core.Exceptions import validation_error
 
 
@@ -53,4 +55,22 @@ class validator:
             raise validation_error(
                 f"Поле «{field_name}» должно содержать "
                 f"{expected_lengths} цифр"
+            )
+
+    @staticmethod
+    def validate_positive_number(value, field_name: str):
+        """Проверяет положительное числовое значение."""
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise validation_error(
+                f"Поле «{field_name}» должно быть числом"
+            )
+
+        if not isfinite(value):
+            raise validation_error(
+                f"Поле «{field_name}» должно быть конечным числом"
+            )
+
+        if value <= 0:
+            raise validation_error(
+                f"Поле «{field_name}» должно быть больше нуля"
             )

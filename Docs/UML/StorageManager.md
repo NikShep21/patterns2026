@@ -23,6 +23,7 @@ classDiagram
         -list __groups
         -list __nomenclature
         -list __warehouses
+        -list __recipes
         +__new__() storage_manager
         +__init__() None
         +load(file_name: str) None
@@ -31,11 +32,13 @@ classDiagram
         +add_group(value: nomenclature_group_model) None
         +add_nomenclature(value: nomenclature_model) None
         +add_warehouse(value: warehouse_model) None
+        +add_recipe(value: recipe_model) None
         +clear() None
         +ranges tuple
         +groups tuple
         +nomenclature tuple
         +warehouses tuple
+        +recipes tuple
         -__add_unique(collection, value, expected_type, field_name) None
         -__create_initial_data() None
     }
@@ -64,13 +67,42 @@ classDiagram
     class nomenclature_model {
         +name str
         +full_name str
+        +type nomenclature_type
         +group nomenclature_group_model
         +range range_model
+    }
+
+    class nomenclature_type {
+        <<enumeration>>
+        RAW_MATERIAL
+        PRODUCT
+        SEMI_FINISHED
+        DISH
     }
 
     class warehouse_model {
         +name str
         +address str
+    }
+
+    class recipe_ingredient_model {
+        +nomenclature nomenclature_model
+        +quantity number
+        +gross_weight number
+        +net_weight number
+    }
+
+    class recipe_model {
+        +name str
+        +result nomenclature_model
+        +ingredients tuple
+        +output_quantity number
+        +cooking_time number
+        +steps tuple
+        +gross_weight number
+        +net_weight number
+        +add_ingredient(value: recipe_ingredient_model) None
+        +remove_ingredient(value: recipe_ingredient_model) None
     }
 
     class validator {
@@ -87,8 +119,13 @@ classDiagram
     storage_manager o-- "0..*" nomenclature_group_model : groups
     storage_manager o-- "0..*" nomenclature_model : nomenclature
     storage_manager o-- "0..*" warehouse_model : warehouses
+    storage_manager o-- "0..*" recipe_model : recipes
     nomenclature_model --> nomenclature_group_model : group
     nomenclature_model --> range_model : range
+    nomenclature_model --> nomenclature_type : type
+    recipe_model *-- "0..*" recipe_ingredient_model : ingredients
+    recipe_model --> nomenclature_model : result
+    recipe_ingredient_model --> nomenclature_model : nomenclature
     range_model --> range_model : base range
     storage_manager ..> validator : проверяет тип модели
     storage_manager ..> operation_error : настройки не загружены
@@ -123,6 +160,8 @@ sequenceDiagram
         Storage->>Storage: add_range() и add_group()
         Storage->>Models: создать номенклатуру и склад
         Storage->>Storage: add_nomenclature() и add_warehouse()
+        Storage->>Models: создать технологическую карту блинов
+        Storage->>Storage: add_recipe()
     else is_first_start = false
         Note over Storage: Коллекции остаются пустыми
     end

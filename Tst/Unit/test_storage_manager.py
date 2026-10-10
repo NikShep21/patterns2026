@@ -5,6 +5,7 @@ from Src.Logics.settings_manager import settings_manager
 from Src.Logics.storage_manager import storage_manager
 from Src.Models.nomenclature_group_model import nomenclature_group_model
 from Src.Models.nomenclature_model import nomenclature_model
+from Src.Models.nomenclature_type import nomenclature_type
 from Src.Models.range_model import range_model
 from Src.Models.warehouse_model import warehouse_model
 
@@ -48,6 +49,7 @@ def test_success_load_on_first_start_creates_initial_data(loaded_managers):
     assert len(storage.groups) == 2
     assert len(storage.nomenclature) == 7
     assert len(storage.warehouses) == 1
+    assert len(storage.recipes) == 1
 
 
 def test_success_not_first_start_keeps_storage_empty(loaded_managers):
@@ -65,6 +67,7 @@ def test_success_not_first_start_keeps_storage_empty(loaded_managers):
     assert storage.groups == ()
     assert storage.nomenclature == ()
     assert storage.warehouses == ()
+    assert storage.recipes == ()
 
 
 def test_success_repeated_convert_does_not_duplicate_initial_data(
@@ -84,6 +87,7 @@ def test_success_repeated_convert_does_not_duplicate_initial_data(
     assert len(storage.groups) == 2
     assert len(storage.nomenclature) == 7
     assert len(storage.warehouses) == 1
+    assert len(storage.recipes) == 1
 
 
 def test_success_initial_data_preserves_model_relations(loaded_managers):
@@ -109,6 +113,33 @@ def test_success_initial_data_preserves_model_relations(loaded_managers):
     assert kilogram.base_range is gram
     assert flour.group is ingredients
     assert flour.range is kilogram
+    assert flour.type is nomenclature_type.RAW_MATERIAL
+
+
+def test_success_initial_data_contains_pancake_recipe(loaded_managers):
+    """Первичные данные содержат технологическую карту блинов."""
+    # Подготовка
+    settings, storage = loaded_managers
+    settings.settings.is_first_start = True
+
+    # Действие
+    storage.load()
+    recipe = storage.recipes[0]
+    pancakes = next(
+        item for item in storage.nomenclature if item.name == "Блины"
+    )
+
+    # Проверка
+    assert recipe.name == "Классические блины"
+    assert recipe.result is pancakes
+    assert recipe.result.type is nomenclature_type.DISH
+    assert recipe.output_quantity == 10
+    assert recipe.result.range.name == "Штука"
+    assert recipe.cooking_time == 30
+    assert len(recipe.ingredients) == 6
+    assert len(recipe.steps) == 6
+    assert recipe.gross_weight == 882
+    assert recipe.net_weight == 862
 
 
 def test_success_storage_loads_settings_when_needed(loaded_managers):
@@ -136,6 +167,7 @@ def test_success_add_models_places_them_in_corresponding_collections(
     product = nomenclature_model(
         "Чай",
         "Чай чёрный байховый",
+        nomenclature_type.PRODUCT,
         group,
         unit,
     )
@@ -203,12 +235,14 @@ def test_fail_duplicate_nomenclature_name_raises_validation_error(
     first_product = nomenclature_model(
         "Блины",
         "Блины классические",
+        nomenclature_type.DISH,
         group,
         unit,
     )
     duplicate_product = nomenclature_model(
         "блины",
         "Блины с начинкой",
+        nomenclature_type.DISH,
         group,
         unit,
     )
