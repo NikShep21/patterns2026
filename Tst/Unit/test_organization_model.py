@@ -4,6 +4,20 @@ from Src.Core.Exceptions import validation_error
 from Src.Models.organization_model import organization_model
 
 
+def test_success_init_without_arguments_returns_empty_organization():
+    """Организацию можно создать до заполнения её реквизитов."""
+    # Действие
+    organization = organization_model()
+
+    # Проверка
+    assert organization.name == ""
+    assert organization.inn == ""
+    assert organization.bik == ""
+    assert organization.account == ""
+    assert organization.corr_account == ""
+    assert organization.ownership_form == ""
+
+
 @pytest.mark.parametrize(
     "inn",
     ("3801000000", "500100732259"),
@@ -147,13 +161,9 @@ def test_fail_ownership_form_invalid_value_raises_validation_error(
     """
     Некорректная форма собственности вызывает ошибку валидации.
     """
+    # Подготовка
+    organization = organization_model()
+
     # Действие / Проверка
     with pytest.raises(validation_error):
-        organization_model(
-            "Ромашка",
-            "3801000000",
-            "042520607",
-            "40702810001",
-            "30101810001",
-            invalid_ownership_form,
-        )
+        organization.ownership_form = invalid_ownership_form

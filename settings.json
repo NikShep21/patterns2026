@@ -1,0 +1,13 @@
+{
+  "organization": {
+    "name": "ООО Ромашка",
+    "inn": "7707083893",
+    "bik": "044525225",
+    "account": "40702810900",
+    "corr_account": "30101810400",
+    "ownership_form": "ООО"
+  },
+  "boss_name": "Иванов И. И.",
+  "accountant_name": "Семёнов А. Г.",
+  "is_first_start": true
+}
