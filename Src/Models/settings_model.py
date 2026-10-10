@@ -6,10 +6,13 @@ from Src.Models.organization_model import organization_model
 class settings_model(base_entity):
     """Модель настроек приложения."""
 
-    __organization: organization_model = None
-    __boss_name: str = ""
-    __accountant_name: str = ""
-    __is_first_start: bool = False
+    def __init__(self):
+        """Инициализирует настройки значениями первого запуска."""
+        super().__init__()
+        self.__organization = organization_model()
+        self.__boss_name = ""
+        self.__accountant_name = ""
+        self.__is_first_start = True
 
     @property
     def organization(self) -> organization_model:

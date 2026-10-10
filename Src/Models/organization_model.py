@@ -7,25 +7,33 @@ class organization_model(base_entity):
 
     def __init__(
         self,
-        name: str,
-        inn: str | None,
-        bik: str,
-        account: str,
-        corr_account: str,
-        ownership_form: str,
+        name: str | None = None,
+        inn: str | None = None,
+        bik: str | None = None,
+        account: str | None = None,
+        corr_account: str | None = None,
+        ownership_form: str | None = None,
     ):
         """Инициализирует организацию."""
         super().__init__()
         self.__inn = ""
-        self.name = name
+        self.__bik = ""
+        self.__account = ""
+        self.__corr_account = ""
+        self.__ownership_form = ""
 
+        if name is not None:
+            self.name = name
         if inn is not None:
             self.inn = inn
-
-        self.bik = bik
-        self.account = account
-        self.corr_account = corr_account
-        self.ownership_form = ownership_form
+        if bik is not None:
+            self.bik = bik
+        if account is not None:
+            self.account = account
+        if corr_account is not None:
+            self.corr_account = corr_account
+        if ownership_form is not None:
+            self.ownership_form = ownership_form
 
     @property
     def inn(self) -> str:

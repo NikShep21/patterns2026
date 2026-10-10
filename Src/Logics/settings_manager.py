@@ -49,27 +49,40 @@ class settings_manager(abstract_manager):
     def convert(self) -> bool:
         """Преобразует загруженные данные в модель настроек."""
         validator.validate_type(self._data, dict, "Настройки")
-        organization_data = self._data["organization"]
+        organization_data = self._data.get("organization", {})
         validator.validate_type(
             organization_data,
             dict,
             "Организация",
         )
 
-        organization = organization_model(
-            organization_data["name"],
-            organization_data.get("inn"),
-            organization_data["bik"],
-            organization_data["account"],
-            organization_data["corr_account"],
-            organization_data["ownership_form"],
+        organization = organization_model()
+        organization_fields = (
+            "name",
+            "inn",
+            "bik",
+            "account",
+            "corr_account",
+            "ownership_form",
         )
+
+        for field in organization_fields:
+            if field in organization_data:
+                setattr(organization, field, organization_data[field])
 
         settings = settings_model()
         settings.organization = organization
-        settings.boss_name = self._data["boss_name"]
-        settings.accountant_name = self._data["accountant_name"]
-        settings.is_first_start = self._data["is_first_start"]
+
+        settings_fields = (
+            "boss_name",
+            "accountant_name",
+            "is_first_start",
+        )
+
+        for field in settings_fields:
+            if field in self._data:
+                setattr(settings, field, self._data[field])
+
         self.__settings = settings
 
         return True
