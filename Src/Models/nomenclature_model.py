@@ -1,6 +1,7 @@
 from Src.Core.Abstract import base_entity
 from Src.Core.Validator import validator
 from Src.Models.nomenclature_group_model import nomenclature_group_model
+from Src.Models.nomenclature_type import nomenclature_type
 from Src.Models.range_model import range_model
 
 
@@ -13,6 +14,7 @@ class nomenclature_model(base_entity):
         self,
         name: str,
         full_name: str,
+        type: nomenclature_type,
         group: nomenclature_group_model,
         range: range_model,
     ):
@@ -20,6 +22,7 @@ class nomenclature_model(base_entity):
         super().__init__()
         self.name = name
         self.full_name = full_name
+        self.type = type
         self.group = group
         self.range = range
 
@@ -37,6 +40,17 @@ class nomenclature_model(base_entity):
             self._max_full_name_length,
         )
         self.__full_name = value.strip()
+
+    @property
+    def type(self) -> nomenclature_type:
+        """Возвращает тип номенклатурной позиции."""
+        return self.__type
+
+    @type.setter
+    def type(self, value: nomenclature_type):
+        """Изменяет тип номенклатурной позиции."""
+        validator.validate_type(value, nomenclature_type, "Тип номенклатуры")
+        self.__type = value
 
     @property
     def group(self) -> nomenclature_group_model:

@@ -1,5 +1,4 @@
 from Src.Core.Abstract import base_entity
-from Src.Core.Exceptions import validation_error
 from Src.Core.Validator import validator
 
 
@@ -47,12 +46,7 @@ class range_model(base_entity):
     @coefficient.setter
     def coefficient(self, value: int | float):
         """Изменяет коэффициент пересчёта в базовую единицу."""
-        if isinstance(value, bool) or not isinstance(value, (int, float)):
-            raise validation_error("Коэффициент должен быть числом")
-
-        if value <= 0:
-            raise validation_error("Коэффициент должен быть больше нуля")
-
+        validator.validate_positive_number(value, "Коэффициент")
         self.__coefficient = value
 
     @property

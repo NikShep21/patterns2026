@@ -4,7 +4,10 @@ from Src.Core.abstract_manager import abstract_manager
 from Src.Logics.settings_manager import settings_manager
 from Src.Models.nomenclature_group_model import nomenclature_group_model
 from Src.Models.nomenclature_model import nomenclature_model
+from Src.Models.nomenclature_type import nomenclature_type
 from Src.Models.range_model import range_model
+from Src.Models.recipe_ingredient_model import recipe_ingredient_model
+from Src.Models.recipe_model import recipe_model
 from Src.Models.warehouse_model import warehouse_model
 
 
@@ -30,6 +33,7 @@ class storage_manager(abstract_manager):
         self.__groups: list[nomenclature_group_model] = []
         self.__nomenclature: list[nomenclature_model] = []
         self.__warehouses: list[warehouse_model] = []
+        self.__recipes: list[recipe_model] = []
         self._initialized = True
 
     def load(self, file_name: str = "") -> None:
@@ -87,12 +91,22 @@ class storage_manager(abstract_manager):
         """Добавляет уникальный склад."""
         self.__add_unique(self.__warehouses, value, warehouse_model, "Склад")
 
+    def add_recipe(self, value: recipe_model) -> None:
+        """Добавляет уникальную технологическую карту."""
+        self.__add_unique(
+            self.__recipes,
+            value,
+            recipe_model,
+            "Технологическая карта",
+        )
+
     def clear(self) -> None:
         """Очищает все коллекции хранилища."""
         self.__ranges.clear()
         self.__groups.clear()
         self.__nomenclature.clear()
         self.__warehouses.clear()
+        self.__recipes.clear()
         self._is_loaded = False
 
     @property
@@ -114,6 +128,11 @@ class storage_manager(abstract_manager):
     def warehouses(self) -> tuple[warehouse_model, ...]:
         """Возвращает склады."""
         return tuple(self.__warehouses)
+
+    @property
+    def recipes(self) -> tuple[recipe_model, ...]:
+        """Возвращает технологические карты."""
+        return tuple(self.__recipes)
 
     @staticmethod
     def __add_unique(
@@ -149,62 +168,91 @@ class storage_manager(abstract_manager):
         self.add_group(ingredients)
         self.add_group(finished_dishes)
 
-        self.add_nomenclature(
-            nomenclature_model(
-                "Мука",
-                "Мука пшеничная высшего сорта",
-                ingredients,
-                kilogram,
-            )
+        flour = nomenclature_model(
+            "Мука",
+            "Мука пшеничная высшего сорта",
+            nomenclature_type.RAW_MATERIAL,
+            ingredients,
+            kilogram,
         )
-        self.add_nomenclature(
-            nomenclature_model(
-                "Молоко",
-                "Молоко питьевое пастеризованное",
-                ingredients,
-                milliliter,
-            )
+        milk = nomenclature_model(
+            "Молоко",
+            "Молоко питьевое пастеризованное",
+            nomenclature_type.RAW_MATERIAL,
+            ingredients,
+            milliliter,
         )
-        self.add_nomenclature(
-            nomenclature_model(
-                "Яйцо",
-                "Яйцо куриное пищевое",
-                ingredients,
-                piece,
-            )
+        egg = nomenclature_model(
+            "Яйцо",
+            "Яйцо куриное пищевое",
+            nomenclature_type.RAW_MATERIAL,
+            ingredients,
+            piece,
         )
-        self.add_nomenclature(
-            nomenclature_model(
-                "Сахар",
-                "Сахар белый кристаллический",
-                ingredients,
-                gram,
-            )
+        sugar = nomenclature_model(
+            "Сахар",
+            "Сахар белый кристаллический",
+            nomenclature_type.RAW_MATERIAL,
+            ingredients,
+            gram,
         )
-        self.add_nomenclature(
-            nomenclature_model(
-                "Соль",
-                "Соль поваренная пищевая",
-                ingredients,
-                gram,
-            )
+        salt = nomenclature_model(
+            "Соль",
+            "Соль поваренная пищевая",
+            nomenclature_type.RAW_MATERIAL,
+            ingredients,
+            gram,
         )
-        self.add_nomenclature(
-            nomenclature_model(
-                "Масло растительное",
-                "Масло подсолнечное рафинированное",
-                ingredients,
-                milliliter,
-            )
+        vegetable_oil = nomenclature_model(
+            "Масло растительное",
+            "Масло подсолнечное рафинированное",
+            nomenclature_type.RAW_MATERIAL,
+            ingredients,
+            milliliter,
         )
-        self.add_nomenclature(
-            nomenclature_model(
-                "Блины",
-                "Блины классические готовые",
-                finished_dishes,
-                piece,
-            )
+        pancakes = nomenclature_model(
+            "Блины",
+            "Блины классические готовые",
+            nomenclature_type.DISH,
+            finished_dishes,
+            piece,
         )
+
+        for item in (
+            flour,
+            milk,
+            egg,
+            sugar,
+            salt,
+            vegetable_oil,
+            pancakes,
+        ):
+            self.add_nomenclature(item)
+
         self.add_warehouse(
             warehouse_model("Основной склад", "ул. Центральная, д. 1")
+        )
+        self.add_recipe(
+            recipe_model(
+                "Классические блины",
+                pancakes,
+                [
+                    recipe_ingredient_model(flour, 0.2, 200, 200),
+                    recipe_ingredient_model(milk, 500, 500, 500),
+                    recipe_ingredient_model(egg, 2, 120, 100),
+                    recipe_ingredient_model(sugar, 30, 30, 30),
+                    recipe_ingredient_model(salt, 2, 2, 2),
+                    recipe_ingredient_model(vegetable_oil, 30, 30, 30),
+                ],
+                10,
+                30,
+                [
+                    "Взбить яйца с сахаром и солью.",
+                    "Добавить половину молока и перемешать.",
+                    "Постепенно всыпать муку и размешать тесто.",
+                    "Добавить оставшееся молоко и растительное масло.",
+                    "Оставить тесто на 10 минут.",
+                    "Выпекать блины с двух сторон до золотистого цвета.",
+                ],
+            )
         )
