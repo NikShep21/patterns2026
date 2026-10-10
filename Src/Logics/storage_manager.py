@@ -134,10 +134,10 @@ class storage_manager(abstract_manager):
 
     def __create_initial_data(self) -> None:
         """Создаёт минимальный набор данных для первого запуска."""
-        gram = range_model("Грамм", 1)
-        kilogram = range_model("Килограмм", 1000, gram)
-        milliliter = range_model("Миллилитр", 1)
-        piece = range_model("Штука", 1)
+        kilogram = range_model.create_kilogram()
+        gram = kilogram.base_range
+        milliliter = range_model.create_milliliter()
+        piece = range_model.create_piece()
 
         ingredients = nomenclature_group_model("Ингредиенты")
         finished_dishes = nomenclature_group_model("Готовые блюда")

@@ -4,6 +4,52 @@ from Src.Core.Exceptions import validation_error
 from Src.Models.range_model import range_model
 
 
+def test_success_create_gram_returns_base_gram():
+    """Фабричный метод создаёт грамм как базовую единицу."""
+    # Действие
+    gram = range_model.create_gram()
+
+    # Проверка
+    assert gram.name == "Грамм"
+    assert gram.coefficient == 1
+    assert gram.base_range is gram
+
+
+def test_success_create_kilogram_returns_unit_based_on_gram():
+    """Фабричный метод создаёт килограмм с базой в граммах."""
+    # Действие
+    kilogram = range_model.create_kilogram()
+
+    # Проверка
+    assert kilogram.name == "Килограмм"
+    assert kilogram.coefficient == 1000
+    assert kilogram.base_range.name == "Грамм"
+    assert kilogram.base_range.coefficient == 1
+    assert kilogram.base_range.base_range is kilogram.base_range
+
+
+@pytest.mark.parametrize(
+    ("factory", "expected_name"),
+    (
+        (range_model.create_milliliter, "Миллилитр"),
+        (range_model.create_piece, "Штука"),
+    ),
+    ids=("milliliter", "piece"),
+)
+def test_success_create_base_range_returns_expected_unit(
+    factory,
+    expected_name,
+):
+    """Фабричные методы создают ожидаемые базовые единицы."""
+    # Действие
+    unit = factory()
+
+    # Проверка
+    assert unit.name == expected_name
+    assert unit.coefficient == 1
+    assert unit.base_range is unit
+
+
 def test_success_init_without_base_range_returns_self_as_base_range():
     """
     Базовая единица устанавливается базой для самой себя.
