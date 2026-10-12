@@ -26,6 +26,7 @@ classDiagram
         PRODUCT
         SEMI_FINISHED
         DISH
+        PACKAGING
     }
 
     class recipe_ingredient_model {
@@ -33,8 +34,10 @@ classDiagram
         -number __quantity
         -number __gross_weight
         -number __net_weight
+        -recipe_model __recipe
         +nomenclature nomenclature_model
         +quantity number
+        +recipe recipe_model
         +gross_weight number
         +net_weight number
     }
@@ -60,6 +63,7 @@ classDiagram
     base_entity <|-- recipe_model
 
     recipe_ingredient_model --> nomenclature_model : ingredient
+    recipe_ingredient_model --> "0..1" recipe_model : nested recipe
     recipe_model --> nomenclature_model : result
     recipe_model *-- "0..*" recipe_ingredient_model : ingredients
     nomenclature_model --> nomenclature_type : type

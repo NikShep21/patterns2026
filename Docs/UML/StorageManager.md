@@ -78,6 +78,7 @@ classDiagram
         PRODUCT
         SEMI_FINISHED
         DISH
+        PACKAGING
     }
 
     class warehouse_model {
@@ -88,6 +89,7 @@ classDiagram
     class recipe_ingredient_model {
         +nomenclature nomenclature_model
         +quantity number
+        +recipe recipe_model
         +gross_weight number
         +net_weight number
     }
@@ -126,6 +128,7 @@ classDiagram
     recipe_model *-- "0..*" recipe_ingredient_model : ingredients
     recipe_model --> nomenclature_model : result
     recipe_ingredient_model --> nomenclature_model : nomenclature
+    recipe_ingredient_model --> "0..1" recipe_model : nested recipe
     range_model --> range_model : base range
     storage_manager ..> validator : проверяет тип модели
     storage_manager ..> operation_error : настройки не загружены
