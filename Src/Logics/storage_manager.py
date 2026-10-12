@@ -159,14 +159,18 @@ class storage_manager(abstract_manager):
         piece = range_model.create_piece()
 
         ingredients = nomenclature_group_model("Ингредиенты")
+        semi_finished = nomenclature_group_model("Полуфабрикаты")
         finished_dishes = nomenclature_group_model("Готовые блюда")
+        packaging = nomenclature_group_model("Упаковка")
 
         self.add_range(gram)
         self.add_range(kilogram)
         self.add_range(milliliter)
         self.add_range(piece)
         self.add_group(ingredients)
+        self.add_group(semi_finished)
         self.add_group(finished_dishes)
+        self.add_group(packaging)
 
         flour = nomenclature_model(
             "Мука",
@@ -210,11 +214,25 @@ class storage_manager(abstract_manager):
             ingredients,
             milliliter,
         )
+        dough = nomenclature_model(
+            "Тесто для блинов",
+            "Тесто для классических блинов",
+            nomenclature_type.SEMI_FINISHED,
+            semi_finished,
+            gram,
+        )
         pancakes = nomenclature_model(
             "Блины",
             "Блины классические готовые",
             nomenclature_type.DISH,
             finished_dishes,
+            piece,
+        )
+        pancake_package = nomenclature_model(
+            "Упаковка для блинов",
+            "Контейнер для готовых блинов",
+            nomenclature_type.PACKAGING,
+            packaging,
             piece,
         )
 
@@ -225,24 +243,47 @@ class storage_manager(abstract_manager):
             sugar,
             salt,
             vegetable_oil,
+            dough,
             pancakes,
+            pancake_package,
         ):
             self.add_nomenclature(item)
 
         self.add_warehouse(
             warehouse_model("Основной склад", "ул. Центральная, д. 1")
         )
+        dough_recipe = recipe_model(
+            "Тесто для блинов",
+            dough,
+            [
+                recipe_ingredient_model(flour, 0.2, 200, 200),
+                recipe_ingredient_model(milk, 500, 500, 500),
+                recipe_ingredient_model(egg, 2, 120, 100),
+                recipe_ingredient_model(sugar, 30, 30, 30),
+                recipe_ingredient_model(salt, 2, 2, 2),
+                recipe_ingredient_model(vegetable_oil, 30, 30, 30),
+            ],
+            862,
+            10,
+            [
+                "Взбить яйца с сахаром и солью.",
+                "Добавить половину молока и перемешать.",
+                "Постепенно всыпать муку и размешать тесто.",
+                "Добавить оставшееся молоко и растительное масло.",
+                "Оставить тесто на 10 минут.",
+            ],
+        )
+        self.add_recipe(dough_recipe)
         self.add_recipe(
             recipe_model(
                 "Классические блины",
                 pancakes,
                 [
-                    recipe_ingredient_model(flour, 0.2, 200, 200),
-                    recipe_ingredient_model(milk, 500, 500, 500),
-                    recipe_ingredient_model(egg, 2, 120, 100),
-                    recipe_ingredient_model(sugar, 30, 30, 30),
-                    recipe_ingredient_model(salt, 2, 2, 2),
-                    recipe_ingredient_model(vegetable_oil, 30, 30, 30),
+                    recipe_ingredient_model(
+                        dough,
+                        recipe=dough_recipe,
+                    ),
+                    recipe_ingredient_model(pancake_package, 1, 20, 20),
                 ],
                 10,
                 30,
