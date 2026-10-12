@@ -8,3 +8,4 @@ class nomenclature_type(Enum):
     PRODUCT = "Продукт"
     SEMI_FINISHED = "Полуфабрикат"
     DISH = "Блюдо"
+    PACKAGING = "Упаковка"

@@ -132,16 +132,18 @@ class recipe_model(base_entity):
 
     @property
     def gross_weight(self) -> int | float:
-        """Вычисляет общий вес брутто всех ингредиентов."""
+        """Рекурсивно вычисляет общий вес брутто всех ингредиентов."""
         return sum(
             ingredient.gross_weight for ingredient in self.__ingredients
         )
 
     @property
     def net_weight(self) -> int | float:
-        """Вычисляет общий вес нетто всех ингредиентов."""
+        """Рекурсивно вычисляет вес нетто без учёта упаковки."""
         return sum(
-            ingredient.net_weight for ingredient in self.__ingredients
+            ingredient.net_weight
+            for ingredient in self.__ingredients
+            if ingredient.nomenclature.type is not nomenclature_type.PACKAGING
         )
 
     def __validate_ingredient(
@@ -157,6 +159,14 @@ class recipe_model(base_entity):
                 "Результат технологической карты не может быть её ингредиентом"
             )
 
+        if value.recipe is not None and self.__contains_recipe(
+            value.recipe,
+            self,
+        ):
+            raise validation_error(
+                "Вложенная технологическая карта образует циклическую зависимость"
+            )
+
         if any(
             ingredient.nomenclature == value.nomenclature
             for ingredient in ingredients
@@ -164,3 +174,31 @@ class recipe_model(base_entity):
             raise validation_error(
                 f"Ингредиент «{value.name}» уже добавлен в технологическую карту"
             )
+
+    @staticmethod
+    def __contains_recipe(
+        source: "recipe_model",
+        target: "recipe_model",
+        visited: set[str] | None = None,
+    ) -> bool:
+        """Проверяет наличие карты в дереве вложенных рецептов."""
+        if source is target:
+            return True
+
+        if visited is None:
+            visited = set()
+
+        if source.id in visited:
+            return False
+
+        visited.add(source.id)
+
+        return any(
+            ingredient.recipe is not None
+            and recipe_model.__contains_recipe(
+                ingredient.recipe,
+                target,
+                visited,
+            )
+            for ingredient in source.ingredients
+        )
