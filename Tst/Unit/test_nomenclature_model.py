@@ -78,7 +78,7 @@ def test_success_full_name_max_length_returns_same_value():
 @pytest.mark.parametrize(
     "value",
     tuple(nomenclature_type),
-    ids=("raw-material", "product", "semi-finished", "dish"),
+    ids=("raw-material", "product", "semi-finished", "dish", "packaging"),
 )
 def test_success_type_accepts_all_nomenclature_types(value):
     """Номенклатура принимает каждый предусмотренный тип."""

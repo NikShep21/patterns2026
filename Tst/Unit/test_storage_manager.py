@@ -46,10 +46,10 @@ def test_success_load_on_first_start_creates_initial_data(loaded_managers):
     # Проверка
     assert storage.is_loaded is True
     assert len(storage.ranges) == 4
-    assert len(storage.groups) == 2
-    assert len(storage.nomenclature) == 7
+    assert len(storage.groups) == 4
+    assert len(storage.nomenclature) == 9
     assert len(storage.warehouses) == 1
-    assert len(storage.recipes) == 1
+    assert len(storage.recipes) == 2
 
 
 def test_success_not_first_start_keeps_storage_empty(loaded_managers):
@@ -84,10 +84,10 @@ def test_success_repeated_convert_does_not_duplicate_initial_data(
 
     # Проверка
     assert len(storage.ranges) == 4
-    assert len(storage.groups) == 2
-    assert len(storage.nomenclature) == 7
+    assert len(storage.groups) == 4
+    assert len(storage.nomenclature) == 9
     assert len(storage.warehouses) == 1
-    assert len(storage.recipes) == 1
+    assert len(storage.recipes) == 2
 
 
 def test_success_initial_data_preserves_model_relations(loaded_managers):
@@ -124,7 +124,14 @@ def test_success_initial_data_contains_pancake_recipe(loaded_managers):
 
     # Действие
     storage.load()
-    recipe = storage.recipes[0]
+    recipe = next(
+        item for item in storage.recipes
+        if item.name == "Классические блины"
+    )
+    dough_recipe = next(
+        item for item in storage.recipes
+        if item.name == "Тесто для блинов"
+    )
     pancakes = next(
         item for item in storage.nomenclature if item.name == "Блины"
     )
@@ -136,9 +143,13 @@ def test_success_initial_data_contains_pancake_recipe(loaded_managers):
     assert recipe.output_quantity == 10
     assert recipe.result.range.name == "Штука"
     assert recipe.cooking_time == 30
-    assert len(recipe.ingredients) == 6
+    assert len(recipe.ingredients) == 2
     assert len(recipe.steps) == 6
-    assert recipe.gross_weight == 882
+    assert recipe.ingredients[0].recipe is dough_recipe
+    assert recipe.ingredients[0].nomenclature is dough_recipe.result
+    assert recipe.ingredients[0].quantity == dough_recipe.output_quantity
+    assert recipe.ingredients[1].nomenclature.type is nomenclature_type.PACKAGING
+    assert recipe.gross_weight == 902
     assert recipe.net_weight == 862
 
 

@@ -286,3 +286,183 @@ def test_fail_invalid_steps_raises_validation_error(recipe_data, steps):
             30,
             steps,
         )
+
+
+def test_success_nested_recipe_is_included_in_weight_calculation():
+    """Вес составной карты рассчитывается через вложенную карту."""
+    # Подготовка
+    gram = range_model.create_gram()
+    piece = range_model.create_piece()
+    ingredients_group = nomenclature_group_model("Ингредиенты")
+    semi_finished_group = nomenclature_group_model("Полуфабрикаты")
+    dishes_group = nomenclature_group_model("Готовые блюда")
+    flour = nomenclature_model(
+        "Мука",
+        "Мука пшеничная",
+        nomenclature_type.RAW_MATERIAL,
+        ingredients_group,
+        gram,
+    )
+    dough = nomenclature_model(
+        "Тесто",
+        "Тесто для блинов",
+        nomenclature_type.SEMI_FINISHED,
+        semi_finished_group,
+        gram,
+    )
+    pancakes = nomenclature_model(
+        "Блины",
+        "Блины классические",
+        nomenclature_type.DISH,
+        dishes_group,
+        piece,
+    )
+    dough_recipe = recipe_model(
+        "Тесто для блинов",
+        dough,
+        [recipe_ingredient_model(flour, 1, 1100, 1000)],
+        1000,
+        15,
+        ["Замесить тесто."],
+    )
+    pancakes_recipe = recipe_model(
+        "Классические блины",
+        pancakes,
+        [recipe_ingredient_model(dough, recipe=dough_recipe)],
+        10,
+        30,
+        ["Выпекать блины."],
+    )
+
+    # Действие
+    gross_weight = pancakes_recipe.gross_weight
+    net_weight = pancakes_recipe.net_weight
+
+    # Проверка
+    assert gross_weight == 1100
+    assert net_weight == 1000
+
+
+def test_fail_nested_recipes_cycle_raises_validation_error():
+    """Технологические карты не могут образовывать цикл вложенности."""
+    # Подготовка
+    gram = range_model.create_gram()
+    group = nomenclature_group_model("Полуфабрикаты")
+    raw_group = nomenclature_group_model("Ингредиенты")
+    raw = nomenclature_model(
+        "Сырьё",
+        "Исходное сырьё",
+        nomenclature_type.RAW_MATERIAL,
+        raw_group,
+        gram,
+    )
+    first_result = nomenclature_model(
+        "Первый",
+        "Первый полуфабрикат",
+        nomenclature_type.SEMI_FINISHED,
+        group,
+        gram,
+    )
+    second_result = nomenclature_model(
+        "Второй",
+        "Второй полуфабрикат",
+        nomenclature_type.SEMI_FINISHED,
+        group,
+        gram,
+    )
+    first_recipe = recipe_model(
+        "Первый полуфабрикат",
+        first_result,
+        [recipe_ingredient_model(raw, 1, 100, 100)],
+        100,
+        10,
+        ["Приготовить первый полуфабрикат."],
+    )
+    second_recipe = recipe_model(
+        "Второй полуфабрикат",
+        second_result,
+        [
+            recipe_ingredient_model(
+                first_result,
+                recipe=first_recipe,
+            )
+        ],
+        100,
+        10,
+        ["Приготовить второй полуфабрикат."],
+    )
+
+    # Действие / Проверка
+    with pytest.raises(validation_error):
+        first_recipe.add_ingredient(
+            recipe_ingredient_model(
+                second_result,
+                recipe=second_recipe,
+            )
+        )
+
+
+def test_success_nested_recipe_net_weight_excludes_packaging():
+    """Упаковка исключается из нетто на любом уровне вложенности."""
+    # Подготовка
+    gram = range_model.create_gram()
+    piece = range_model.create_piece()
+    ingredients_group = nomenclature_group_model("Ингредиенты")
+    semi_finished_group = nomenclature_group_model("Полуфабрикаты")
+    dishes_group = nomenclature_group_model("Готовые блюда")
+    packaging_group = nomenclature_group_model("Упаковка")
+    flour = nomenclature_model(
+        "Мука",
+        "Мука пшеничная",
+        nomenclature_type.RAW_MATERIAL,
+        ingredients_group,
+        gram,
+    )
+    dough = nomenclature_model(
+        "Тесто",
+        "Тесто для блинов",
+        nomenclature_type.SEMI_FINISHED,
+        semi_finished_group,
+        gram,
+    )
+    pancakes = nomenclature_model(
+        "Блины",
+        "Блины классические",
+        nomenclature_type.DISH,
+        dishes_group,
+        piece,
+    )
+    package = nomenclature_model(
+        "Упаковка",
+        "Контейнер для блинов",
+        nomenclature_type.PACKAGING,
+        packaging_group,
+        piece,
+    )
+    dough_recipe = recipe_model(
+        "Тесто",
+        dough,
+        [
+            recipe_ingredient_model(flour, 1, 100, 90),
+            recipe_ingredient_model(package, 1, 20, 20),
+        ],
+        90,
+        10,
+        ["Замесить тесто."],
+    )
+    pancakes_recipe = recipe_model(
+        "Блины",
+        pancakes,
+        [recipe_ingredient_model(dough, recipe=dough_recipe)],
+        10,
+        20,
+        ["Выпекать блины."],
+    )
+
+    # Действие
+    gross_weight = pancakes_recipe.gross_weight
+    net_weight = pancakes_recipe.net_weight
+
+    # Проверка
+    assert gross_weight == 120
+    assert net_weight == 90
