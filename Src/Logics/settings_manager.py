@@ -4,6 +4,7 @@ from Src.Core.Exceptions import operation_error
 from Src.Core.Validator import validator
 from Src.Core.abstract_manager import abstract_manager
 from Src.Models.organization_model import organization_model
+from Src.Models.report_format import report_format
 from Src.Models.settings_model import settings_model
 
 
@@ -82,6 +83,11 @@ class settings_manager(abstract_manager):
         for field in settings_fields:
             if field in self._data:
                 setattr(settings, field, self._data[field])
+
+        if "response_format" in self._data:
+            settings.response_format = report_format.from_string(
+                self._data["response_format"]
+            )
 
         self.__settings = settings
 
