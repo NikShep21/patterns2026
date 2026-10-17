@@ -18,3 +18,17 @@
 - `Src/Dtos` — DTO для передачи данных.
 - `Tst` — модульные, интеграционные и функциональные тесты.
 - `Docs` — документация проекта.
+
+## Запуск REST API
+
+```bash
+pip install -r requirements.txt
+python main.py
+```
+
+Документация и проверка запросов доступны в Swagger UI:
+`http://127.0.0.1:8000/docs`.
+
+- `/api/reports/{response_format}/{value_type}/{code}` — отчёт в явно
+  указанном формате.
+- `/api/reports/{value_type}/{code}` — отчёт в формате из настроек.
