@@ -34,6 +34,7 @@ classDiagram
         +add_warehouse(value: warehouse_model) None
         +add_recipe(value: recipe_model) None
         +clear() None
+        +find(value_type: entity_type, code: str) base_entity
         +ranges tuple
         +groups tuple
         +nomenclature tuple
@@ -114,6 +115,13 @@ classDiagram
     class operation_error
     class validation_error
 
+    class entity_type {
+        <<enumeration>>
+        NOMENCLATURE
+        RANGE
+        RECIPE
+    }
+
     abstract_manager <|-- storage_manager
     storage_manager ..> settings_manager : использует настройки
     settings_manager *-- settings_model : settings
@@ -122,6 +130,7 @@ classDiagram
     storage_manager o-- "0..*" nomenclature_model : nomenclature
     storage_manager o-- "0..*" warehouse_model : warehouses
     storage_manager o-- "0..*" recipe_model : recipes
+    storage_manager ..> entity_type : выбирает коллекцию
     nomenclature_model --> nomenclature_group_model : group
     nomenclature_model --> range_model : range
     nomenclature_model --> nomenclature_type : type
