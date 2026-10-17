@@ -2,6 +2,7 @@ from Src.Core.Exceptions import operation_error, validation_error
 from Src.Core.Validator import validator
 from Src.Core.abstract_manager import abstract_manager
 from Src.Logics.settings_manager import settings_manager
+from Src.Models.entity_type import entity_type
 from Src.Models.nomenclature_group_model import nomenclature_group_model
 from Src.Models.nomenclature_model import nomenclature_model
 from Src.Models.nomenclature_type import nomenclature_type
@@ -108,6 +109,25 @@ class storage_manager(abstract_manager):
         self.__warehouses.clear()
         self.__recipes.clear()
         self._is_loaded = False
+
+    def find(self, value_type: entity_type, code: str):
+        """Возвращает сущность указанного типа по уникальному коду."""
+        validator.validate_type(value_type, entity_type, "Тип сущности")
+        validator.validate_required_string(code, "Код сущности")
+        collections = {
+            entity_type.NOMENCLATURE: self.__nomenclature,
+            entity_type.RANGE: self.__ranges,
+            entity_type.RECIPE: self.__recipes,
+        }
+
+        return next(
+            (
+                item
+                for item in collections[value_type]
+                if item.id == code.strip()
+            ),
+            None,
+        )
 
     @property
     def ranges(self) -> tuple[range_model, ...]:

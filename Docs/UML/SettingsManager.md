@@ -41,10 +41,12 @@ classDiagram
         -str __boss_name
         -str __accountant_name
         -bool __is_first_start
+        -report_format __response_format
         +organization organization_model
         +boss_name str
         +accountant_name str
         +is_first_start bool
+        +response_format report_format
     }
 
     class organization_model {
@@ -63,11 +65,22 @@ classDiagram
 
     class operation_error
 
+    class report_format {
+        <<enumeration>>
+        CSV
+        MARKDOWN
+        XML
+        TXT
+        HTML
+        +from_string(value: str) report_format
+    }
+
     abstract_manager <|-- settings_manager
     base_entity <|-- settings_model
     base_entity <|-- organization_model
     settings_manager *-- settings_model : settings
     settings_model *-- organization_model : organization
+    settings_model --> report_format : response format
     settings_manager ..> organization_model : создаёт
     settings_manager ..> validator : проверяет данные
     settings_manager ..> operation_error : вызывает
