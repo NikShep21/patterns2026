@@ -3,7 +3,7 @@ from xml.etree.ElementTree import Element, SubElement, indent, tostring
 from Src.Core.Abstract import base_entity
 from Src.Core.abstract_report import abstract_report
 from Src.Dtos.report_result_dto import report_result_dto
-from Src.Logics.report_data_builder import report_data_builder
+from Src.Logics.report_data_builder_factory import report_data_builder_factory
 
 
 class xml_report(abstract_report):
@@ -11,7 +11,8 @@ class xml_report(abstract_report):
 
     def build(self, source: base_entity) -> report_result_dto:
         """Формирует XML-отчёт по сущности."""
-        data = report_data_builder.build(source)
+        builder = report_data_builder_factory.create(source)
+        data = builder.build(source)
         root_name, root_value = next(iter(data.items()))
         root = Element(root_name)
         self.__fill_element(root, root_value)

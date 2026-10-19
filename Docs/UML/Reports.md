@@ -57,7 +57,29 @@ classDiagram
     }
 
     class report_data_builder {
+        <<abstract>>
         +build(source: base_entity) dict
+        #_build_reference(source: base_entity) dict
+    }
+
+    class nomenclature_report_data_builder {
+        +build(source: nomenclature_model) dict
+    }
+
+    class range_report_data_builder {
+        +build(source: range_model) dict
+    }
+
+    class recipe_report_data_builder {
+        +build(source: recipe_model) dict
+    }
+
+    class report_data_builder_factory {
+        -dict __builders
+        +create(source: base_entity) report_data_builder
+    }
+
+    class report_data_flattener {
         +flatten(data: dict) list
     }
 
@@ -99,18 +121,27 @@ classDiagram
 
     abstract_report ..> base_entity : source
     abstract_report ..> report_result_dto : result
-    csv_report ..> report_data_builder
-    markdown_report ..> report_data_builder
-    xml_report ..> report_data_builder
-    text_report ..> report_data_builder
-    html_report ..> report_data_builder
+    csv_report ..> report_data_builder_factory
+    markdown_report ..> report_data_builder_factory
+    xml_report ..> report_data_builder_factory
+    text_report ..> report_data_builder_factory
+    html_report ..> report_data_builder_factory
+    csv_report ..> report_data_flattener
+    markdown_report ..> report_data_flattener
+    text_report ..> report_data_flattener
+    html_report ..> report_data_flattener
+
+    report_data_builder <|-- nomenclature_report_data_builder
+    report_data_builder <|-- range_report_data_builder
+    report_data_builder <|-- recipe_report_data_builder
+    report_data_builder_factory ..> report_data_builder : создаёт
 
     base_entity <|-- nomenclature_model
     base_entity <|-- range_model
     base_entity <|-- recipe_model
-    report_data_builder ..> nomenclature_model
-    report_data_builder ..> range_model
-    report_data_builder ..> recipe_model
+    nomenclature_report_data_builder ..> nomenclature_model
+    range_report_data_builder ..> range_model
+    recipe_report_data_builder ..> recipe_model
 ```
 
 ## Последовательность формирования отчёта
@@ -123,7 +154,9 @@ sequenceDiagram
     participant Storage as storage_manager
     participant Factory as report_factory
     participant Report as abstract_report
-    participant Builder as report_data_builder
+    participant BuilderFactory as report_data_builder_factory
+    participant Builder as конкретный report_data_builder
+    participant Flattener as report_data_flattener
     participant Result as report_result_dto
 
     Client->>API: GET /api/reports/{format}/{type}/{code}
@@ -143,8 +176,14 @@ sequenceDiagram
 
         Factory-->>API: report
         API->>Report: build(entity)
+        Report->>BuilderFactory: create(entity)
+        BuilderFactory-->>Report: builder
         Report->>Builder: build(entity)
         Builder-->>Report: данные сущности
+        opt Плоский формат отчёта
+            Report->>Flattener: flatten(data)
+            Flattener-->>Report: список полей и значений
+        end
         Report->>Result: создать результат
         Result-->>Report: content, media type, extension
         Report-->>API: result

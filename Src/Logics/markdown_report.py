@@ -1,7 +1,8 @@
 from Src.Core.Abstract import base_entity
 from Src.Core.abstract_report import abstract_report
 from Src.Dtos.report_result_dto import report_result_dto
-from Src.Logics.report_data_builder import report_data_builder
+from Src.Logics.report_data_builder_factory import report_data_builder_factory
+from Src.Logics.report_data_flattener import report_data_flattener
 
 
 class markdown_report(abstract_report):
@@ -14,8 +15,10 @@ class markdown_report(abstract_report):
             "| --- | --- |",
         ]
 
-        for field, value in report_data_builder.flatten(
-            report_data_builder.build(source)
+        builder = report_data_builder_factory.create(source)
+
+        for field, value in report_data_flattener.flatten(
+            builder.build(source)
         ):
             prepared_value = value.replace("|", "\\|").replace("\n", "<br>")
             lines.append(f"| {field} | {prepared_value} |")

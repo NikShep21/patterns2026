@@ -1,7 +1,12 @@
 import pytest
 
 from Src.Core.Exceptions import validation_error
-from Src.Logics.report_data_builder import report_data_builder
+from Src.Logics.nomenclature_report_data_builder import (
+    nomenclature_report_data_builder,
+)
+from Src.Logics.range_report_data_builder import range_report_data_builder
+from Src.Logics.recipe_report_data_builder import recipe_report_data_builder
+from Src.Logics.report_data_builder_factory import report_data_builder_factory
 from Src.Models.nomenclature_group_model import nomenclature_group_model
 from Src.Models.nomenclature_model import nomenclature_model
 from Src.Models.nomenclature_type import nomenclature_type
@@ -48,7 +53,7 @@ def test_success_report_data_builder_builds_range(report_entities):
     gram, _, _ = report_entities
 
     # Действие
-    data = report_data_builder.build(gram)["range"]
+    data = range_report_data_builder().build(gram)["range"]
 
     # Проверка
     assert data["id"] == gram.id
@@ -63,7 +68,7 @@ def test_success_report_data_builder_builds_nomenclature(report_entities):
     _, flour, _ = report_entities
 
     # Действие
-    data = report_data_builder.build(flour)["nomenclature"]
+    data = nomenclature_report_data_builder().build(flour)["nomenclature"]
 
     # Проверка
     assert data["id"] == flour.id
@@ -80,7 +85,7 @@ def test_success_report_data_builder_builds_recipe(report_entities):
     _, _, recipe = report_entities
 
     # Действие
-    data = report_data_builder.build(recipe)["recipe"]
+    data = recipe_report_data_builder().build(recipe)["recipe"]
 
     # Проверка
     assert data["id"] == recipe.id
@@ -95,6 +100,30 @@ def test_success_report_data_builder_builds_recipe(report_entities):
     assert data["steps"] == ["Замесить тесто.", "Выпекать блины."]
 
 
+@pytest.mark.parametrize(
+    ("entity_index", "builder_type"),
+    (
+        (0, range_report_data_builder),
+        (1, nomenclature_report_data_builder),
+        (2, recipe_report_data_builder),
+    ),
+)
+def test_success_report_data_builder_factory_selects_builder(
+    report_entities,
+    entity_index,
+    builder_type,
+):
+    """Проверяет выбор builder по типу сущности."""
+    # Подготовка
+    entity = report_entities[entity_index]
+
+    # Действие
+    builder = report_data_builder_factory.create(entity)
+
+    # Проверка
+    assert isinstance(builder, builder_type)
+
+
 def test_fail_report_data_builder_unsupported_entity_raises_validation_error():
     """Проверяет ошибку для неподдерживаемой сущности."""
     # Подготовка
@@ -102,4 +131,4 @@ def test_fail_report_data_builder_unsupported_entity_raises_validation_error():
 
     # Действие / Проверка
     with pytest.raises(validation_error):
-        report_data_builder.build(warehouse)
+        report_data_builder_factory.create(warehouse)
