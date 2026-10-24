@@ -6,6 +6,7 @@ import pytest
 
 from Src.Core.Exceptions import operation_error
 from Src.Logics.settings_manager import settings_manager
+from Src.Models.report_format import report_format
 
 
 def test_not_raise_settings_manager_load():
@@ -87,6 +88,18 @@ def test_success_settings_manager_loads_first_start_flag():
     assert manager.settings.is_first_start is True
 
 
+def test_success_settings_manager_loads_response_format():
+    """Проверяет загрузку формата ответа по умолчанию."""
+    # Подготовка
+    manager = settings_manager()
+
+    # Действие
+    manager.load()
+
+    # Проверка
+    assert manager.settings.response_format is report_format.TXT
+
+
 def test_success_settings_manager_converts_all_fields():
     """Проверяет преобразование всех полей настроек в модели."""
     # Подготовка
@@ -106,6 +119,7 @@ def test_success_settings_manager_converts_all_fields():
     assert organization.ownership_form == "ООО"
     assert settings.boss_name == "Иванов И. И."
     assert settings.accountant_name == "Семёнов А. Г."
+    assert settings.response_format is report_format.TXT
 
 
 def test_success_settings_manager_loads_without_optional_fields(monkeypatch):
@@ -134,6 +148,40 @@ def test_success_settings_manager_loads_without_optional_fields(monkeypatch):
     assert manager.settings.boss_name == ""
     assert manager.settings.accountant_name == ""
     assert manager.settings.is_first_start is True
+    assert manager.settings.response_format is report_format.TXT
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    (
+        ("CSV", report_format.CSV),
+        ("markdown", report_format.MARKDOWN),
+        ("XML", report_format.XML),
+        ("txt", report_format.TXT),
+        ("HTML", report_format.HTML),
+    ),
+)
+def test_success_settings_manager_loads_supported_response_formats(
+    monkeypatch,
+    value,
+    expected,
+):
+    """Проверяет загрузку всех поддерживаемых форматов ответа."""
+    # Подготовка
+    manager = settings_manager()
+    data = {"response_format": value}
+    monkeypatch.setattr(
+        "builtins.open",
+        lambda *args, **kwargs: StringIO(
+            json.dumps(data, ensure_ascii=False)
+        ),
+    )
+
+    # Действие
+    manager.load("settings-with-response-format.json")
+
+    # Проверка
+    assert manager.settings.response_format is expected
 
 
 def test_fail_settings_manager_missing_file_raises_operation_error(monkeypatch):
@@ -182,5 +230,26 @@ def test_fail_settings_manager_invalid_first_start_raises_operation_error(
     # Действие / Проверка
     with pytest.raises(operation_error):
         manager.load("invalid-settings.json")
+
+    assert manager.is_loaded is False
+
+
+def test_fail_settings_manager_invalid_response_format_raises_operation_error(
+    monkeypatch,
+):
+    """Проверяет ошибку при неизвестном формате ответа."""
+    # Подготовка
+    manager = settings_manager()
+    data = {"response_format": "PDF"}
+    monkeypatch.setattr(
+        "builtins.open",
+        lambda *args, **kwargs: StringIO(
+            json.dumps(data, ensure_ascii=False)
+        ),
+    )
+
+    # Действие / Проверка
+    with pytest.raises(operation_error):
+        manager.load("settings-with-invalid-response-format.json")
 
     assert manager.is_loaded is False

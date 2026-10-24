@@ -3,6 +3,7 @@ import pytest
 from Src.Core.Exceptions import validation_error
 from Src.Logics.settings_manager import settings_manager
 from Src.Logics.storage_manager import storage_manager
+from Src.Models.entity_type import entity_type
 from Src.Models.nomenclature_group_model import nomenclature_group_model
 from Src.Models.nomenclature_model import nomenclature_model
 from Src.Models.nomenclature_type import nomenclature_type
@@ -165,6 +166,68 @@ def test_success_storage_loads_settings_when_needed(loaded_managers):
     # Проверка
     assert settings.is_loaded is True
     assert storage.is_loaded is True
+
+
+@pytest.mark.parametrize(
+    ("value_type", "collection_name"),
+    (
+        (entity_type.NOMENCLATURE, "nomenclature"),
+        (entity_type.RANGE, "ranges"),
+        (entity_type.RECIPE, "recipes"),
+    ),
+)
+def test_success_storage_find_returns_entity_by_type_and_code(
+    loaded_managers,
+    value_type,
+    collection_name,
+):
+    """Проверяет поиск поддерживаемых сущностей по коду."""
+    # Подготовка
+    settings, storage = loaded_managers
+    settings.settings.is_first_start = True
+    storage.load()
+    entity = getattr(storage, collection_name)[0]
+
+    # Действие
+    result = storage.find(value_type, entity.id)
+
+    # Проверка
+    assert result is entity
+
+
+def test_success_storage_find_unknown_code_returns_none(loaded_managers):
+    """Проверяет отсутствие результата для неизвестного кода."""
+    # Подготовка
+    settings, storage = loaded_managers
+    settings.settings.is_first_start = True
+    storage.load()
+
+    # Действие
+    result = storage.find(entity_type.RECIPE, "unknown-code")
+
+    # Проверка
+    assert result is None
+
+
+@pytest.mark.parametrize(
+    ("value_type", "code"),
+    (
+        ("recipe", "code"),
+        (entity_type.RECIPE, ""),
+    ),
+)
+def test_fail_storage_find_invalid_arguments_raises_validation_error(
+    loaded_managers,
+    value_type,
+    code,
+):
+    """Проверяет валидацию параметров поиска сущности."""
+    # Подготовка
+    _, storage = loaded_managers
+
+    # Действие / Проверка
+    with pytest.raises(validation_error):
+        storage.find(value_type, code)
 
 
 def test_success_add_models_places_them_in_corresponding_collections(

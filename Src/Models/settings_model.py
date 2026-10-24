@@ -1,6 +1,7 @@
 from Src.Core.Abstract import base_entity
 from Src.Core.Validator import validator
 from Src.Models.organization_model import organization_model
+from Src.Models.report_format import report_format
 
 
 class settings_model(base_entity):
@@ -13,6 +14,7 @@ class settings_model(base_entity):
         self.__boss_name = ""
         self.__accountant_name = ""
         self.__is_first_start = True
+        self.__response_format = report_format.TXT
 
     @property
     def organization(self) -> organization_model:
@@ -57,3 +59,14 @@ class settings_model(base_entity):
         """Изменяет признак первого запуска приложения."""
         validator.validate_type(value, bool, "Первый запуск")
         self.__is_first_start = value
+
+    @property
+    def response_format(self) -> report_format:
+        """Возвращает формат ответа по умолчанию."""
+        return self.__response_format
+
+    @response_format.setter
+    def response_format(self, value: report_format) -> None:
+        """Изменяет формат ответа по умолчанию."""
+        validator.validate_type(value, report_format, "Формат ответа")
+        self.__response_format = value
