@@ -5,10 +5,7 @@
             "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
             "name": "Грамм",
             "coefficient": 1,
-            "base_range": {
-                "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
-                "name": "Грамм"
-            }
+            "base_range": null
         },
         {
             "id": "5990f380-b6ef-4580-bcf9-26e0d5664883",
@@ -18,29 +15,20 @@
                 "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
                 "name": "Грамм",
                 "coefficient": 1,
-                "base_range": {
-                    "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
-                    "name": "Грамм"
-                }
+                "base_range": null
             }
         },
         {
             "id": "028b9742-722c-44be-ac8d-841be73ae24e",
             "name": "Миллилитр",
             "coefficient": 1,
-            "base_range": {
-                "id": "028b9742-722c-44be-ac8d-841be73ae24e",
-                "name": "Миллилитр"
-            }
+            "base_range": null
         },
         {
             "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
             "name": "Штука",
             "coefficient": 1,
-            "base_range": {
-                "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
-                "name": "Штука"
-            }
+            "base_range": null
         }
     ],
     "groups": [
@@ -79,10 +67,7 @@
                     "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
                     "name": "Грамм",
                     "coefficient": 1,
-                    "base_range": {
-                        "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
-                        "name": "Грамм"
-                    }
+                    "base_range": null
                 }
             }
         },
@@ -99,10 +84,7 @@
                 "id": "028b9742-722c-44be-ac8d-841be73ae24e",
                 "name": "Миллилитр",
                 "coefficient": 1,
-                "base_range": {
-                    "id": "028b9742-722c-44be-ac8d-841be73ae24e",
-                    "name": "Миллилитр"
-                }
+                "base_range": null
             }
         },
         {
@@ -118,10 +100,7 @@
                 "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
                 "name": "Штука",
                 "coefficient": 1,
-                "base_range": {
-                    "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
-                    "name": "Штука"
-                }
+                "base_range": null
             }
         },
         {
@@ -137,10 +116,7 @@
                 "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
                 "name": "Грамм",
                 "coefficient": 1,
-                "base_range": {
-                    "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
-                    "name": "Грамм"
-                }
+                "base_range": null
             }
         },
         {
@@ -156,10 +132,7 @@
                 "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
                 "name": "Грамм",
                 "coefficient": 1,
-                "base_range": {
-                    "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
-                    "name": "Грамм"
-                }
+                "base_range": null
             }
         },
         {
@@ -175,10 +148,7 @@
                 "id": "028b9742-722c-44be-ac8d-841be73ae24e",
                 "name": "Миллилитр",
                 "coefficient": 1,
-                "base_range": {
-                    "id": "028b9742-722c-44be-ac8d-841be73ae24e",
-                    "name": "Миллилитр"
-                }
+                "base_range": null
             }
         },
         {
@@ -194,10 +164,7 @@
                 "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
                 "name": "Грамм",
                 "coefficient": 1,
-                "base_range": {
-                    "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
-                    "name": "Грамм"
-                }
+                "base_range": null
             }
         },
         {
@@ -213,10 +180,7 @@
                 "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
                 "name": "Штука",
                 "coefficient": 1,
-                "base_range": {
-                    "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
-                    "name": "Штука"
-                }
+                "base_range": null
             }
         },
         {
@@ -232,10 +196,7 @@
                 "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
                 "name": "Штука",
                 "coefficient": 1,
-                "base_range": {
-                    "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
-                    "name": "Штука"
-                }
+                "base_range": null
             }
         }
     ],
@@ -263,10 +224,7 @@
                     "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
                     "name": "Грамм",
                     "coefficient": 1,
-                    "base_range": {
-                        "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
-                        "name": "Грамм"
-                    }
+                    "base_range": null
                 }
             },
             "ingredients": [
@@ -290,10 +248,7 @@
                                 "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
                                 "name": "Грамм",
                                 "coefficient": 1,
-                                "base_range": {
-                                    "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
-                                    "name": "Грамм"
-                                }
+                                "base_range": null
                             }
                         }
                     },
@@ -318,10 +273,7 @@
                             "id": "028b9742-722c-44be-ac8d-841be73ae24e",
                             "name": "Миллилитр",
                             "coefficient": 1,
-                            "base_range": {
-                                "id": "028b9742-722c-44be-ac8d-841be73ae24e",
-                                "name": "Миллилитр"
-                            }
+                            "base_range": null
                         }
                     },
                     "quantity": 500,
@@ -345,10 +297,7 @@
                             "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
                             "name": "Штука",
                             "coefficient": 1,
-                            "base_range": {
-                                "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
-                                "name": "Штука"
-                            }
+                            "base_range": null
                         }
                     },
                     "quantity": 2,
@@ -372,10 +321,7 @@
                             "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
                             "name": "Грамм",
                             "coefficient": 1,
-                            "base_range": {
-                                "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
-                                "name": "Грамм"
-                            }
+                            "base_range": null
                         }
                     },
                     "quantity": 30,
@@ -399,10 +345,7 @@
                             "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
                             "name": "Грамм",
                             "coefficient": 1,
-                            "base_range": {
-                                "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
-                                "name": "Грамм"
-                            }
+                            "base_range": null
                         }
                     },
                     "quantity": 2,
@@ -426,10 +369,7 @@
                             "id": "028b9742-722c-44be-ac8d-841be73ae24e",
                             "name": "Миллилитр",
                             "coefficient": 1,
-                            "base_range": {
-                                "id": "028b9742-722c-44be-ac8d-841be73ae24e",
-                                "name": "Миллилитр"
-                            }
+                            "base_range": null
                         }
                     },
                     "quantity": 30,
@@ -466,10 +406,7 @@
                     "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
                     "name": "Штука",
                     "coefficient": 1,
-                    "base_range": {
-                        "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
-                        "name": "Штука"
-                    }
+                    "base_range": null
                 }
             },
             "ingredients": [
@@ -489,10 +426,7 @@
                             "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
                             "name": "Грамм",
                             "coefficient": 1,
-                            "base_range": {
-                                "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
-                                "name": "Грамм"
-                            }
+                            "base_range": null
                         }
                     },
                     "quantity": 862,
@@ -512,10 +446,7 @@
                                 "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
                                 "name": "Грамм",
                                 "coefficient": 1,
-                                "base_range": {
-                                    "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
-                                    "name": "Грамм"
-                                }
+                                "base_range": null
                             }
                         },
                         "ingredients": [
@@ -539,10 +470,7 @@
                                             "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
                                             "name": "Грамм",
                                             "coefficient": 1,
-                                            "base_range": {
-                                                "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
-                                                "name": "Грамм"
-                                            }
+                                            "base_range": null
                                         }
                                     }
                                 },
@@ -567,10 +495,7 @@
                                         "id": "028b9742-722c-44be-ac8d-841be73ae24e",
                                         "name": "Миллилитр",
                                         "coefficient": 1,
-                                        "base_range": {
-                                            "id": "028b9742-722c-44be-ac8d-841be73ae24e",
-                                            "name": "Миллилитр"
-                                        }
+                                        "base_range": null
                                     }
                                 },
                                 "quantity": 500,
@@ -594,10 +519,7 @@
                                         "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
                                         "name": "Штука",
                                         "coefficient": 1,
-                                        "base_range": {
-                                            "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
-                                            "name": "Штука"
-                                        }
+                                        "base_range": null
                                     }
                                 },
                                 "quantity": 2,
@@ -621,10 +543,7 @@
                                         "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
                                         "name": "Грамм",
                                         "coefficient": 1,
-                                        "base_range": {
-                                            "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
-                                            "name": "Грамм"
-                                        }
+                                        "base_range": null
                                     }
                                 },
                                 "quantity": 30,
@@ -648,10 +567,7 @@
                                         "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
                                         "name": "Грамм",
                                         "coefficient": 1,
-                                        "base_range": {
-                                            "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
-                                            "name": "Грамм"
-                                        }
+                                        "base_range": null
                                     }
                                 },
                                 "quantity": 2,
@@ -675,10 +591,7 @@
                                         "id": "028b9742-722c-44be-ac8d-841be73ae24e",
                                         "name": "Миллилитр",
                                         "coefficient": 1,
-                                        "base_range": {
-                                            "id": "028b9742-722c-44be-ac8d-841be73ae24e",
-                                            "name": "Миллилитр"
-                                        }
+                                        "base_range": null
                                     }
                                 },
                                 "quantity": 30,
@@ -718,10 +631,7 @@
                             "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
                             "name": "Штука",
                             "coefficient": 1,
-                            "base_range": {
-                                "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
-                                "name": "Штука"
-                            }
+                            "base_range": null
                         }
                     },
                     "quantity": 1,

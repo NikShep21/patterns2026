@@ -58,7 +58,7 @@ classDiagram
     class range_model {
         +name str
         +coefficient number
-        +base_range range_model
+        +base_range range_model_or_None
     }
 
     class nomenclature_group_model {
@@ -138,7 +138,7 @@ classDiagram
     recipe_model --> nomenclature_model : result
     recipe_ingredient_model --> nomenclature_model : nomenclature
     recipe_ingredient_model --> "0..1" recipe_model : nested recipe
-    range_model --> range_model : base range
+    range_model --> "0..1" range_model : base range
     storage_manager ..> validator : проверяет тип модели
     storage_manager ..> operation_error : настройки не загружены
     storage_manager ..> validation_error : найден дубликат

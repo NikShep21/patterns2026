@@ -113,9 +113,10 @@ def test_success_convert_factory_converts_nested_model():
 
 
 def test_success_convert_factory_stops_cyclic_reference():
-    """Проверяет завершение рекурсии для базовой единицы."""
+    """Проверяет завершение рекурсии для явно созданной самоссылки."""
     # Подготовка
     gram = range_model.create_gram()
+    gram.base_range = gram
 
     # Действие
     result = convert_factory().convert(gram)
@@ -124,6 +125,29 @@ def test_success_convert_factory_stops_cyclic_reference():
     assert result["base_range"] == {
         "id": gram.id,
         "name": "Грамм",
+    }
+
+
+def test_success_convert_factory_converts_unit_without_cycle():
+    """Проверяет все поля производной и базовой единиц измерения."""
+    # Подготовка
+    kilogram = range_model.create_kilogram()
+    gram = kilogram.base_range
+
+    # Действие
+    result = convert_factory().convert(kilogram)
+
+    # Проверка
+    assert result == {
+        "id": kilogram.id,
+        "name": "Килограмм",
+        "coefficient": 1000,
+        "base_range": {
+            "id": gram.id,
+            "name": "Грамм",
+            "coefficient": 1,
+            "base_range": None,
+        },
     }
 
 

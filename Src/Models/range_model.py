@@ -15,7 +15,7 @@ class range_model(base_entity):
         super().__init__()
         self.name = name
         self.coefficient = coefficient
-        self.base_range = self if base_range is None else base_range
+        self.base_range = base_range
 
     @classmethod
     def create_gram(cls) -> "range_model":
@@ -50,12 +50,13 @@ class range_model(base_entity):
         self.__coefficient = value
 
     @property
-    def base_range(self) -> "range_model":
-        """Возвращает базовую единицу измерения."""
+    def base_range(self) -> "range_model | None":
+        """Возвращает базовую единицу или None, если единица уже базовая."""
         return self.__base_range
 
     @base_range.setter
-    def base_range(self, value: "range_model"):
+    def base_range(self, value: "range_model | None"):
         """Изменяет базовую единицу измерения."""
-        validator.validate_type(value, range_model, "Базовая единица")
+        if value is not None:
+            validator.validate_type(value, range_model, "Базовая единица")
         self.__base_range = value
