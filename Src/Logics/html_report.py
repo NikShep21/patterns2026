@@ -3,7 +3,7 @@ from html import escape
 from Src.Core.Abstract import base_entity
 from Src.Core.abstract_report import abstract_report
 from Src.Dtos.report_result_dto import report_result_dto
-from Src.Logics.convert_factory import convert_factory
+from Src.Logics.report_data_builder_factory import report_data_builder_factory
 from Src.Logics.report_data_flattener import report_data_flattener
 
 
@@ -13,11 +13,11 @@ class html_report(abstract_report):
     def build(self, source: base_entity) -> report_result_dto:
         """Формирует HTML-отчёт по сущности."""
         rows = []
-        factory = convert_factory()
-        root_name = type(source).__name__.removesuffix("_model")
+
+        builder = report_data_builder_factory.create(source)
 
         for field, value in report_data_flattener.flatten(
-            {root_name: factory.convert(source)}
+            builder.build(source)
         ):
             rows.append(
                 "<tr>"

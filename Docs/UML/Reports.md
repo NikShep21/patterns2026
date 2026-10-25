@@ -56,31 +56,27 @@ classDiagram
         +file_extension str
     }
 
-    class abstract_converter {
+    class report_data_builder {
         <<abstract>>
-        +convert(field_name: str, value) dict
+        +build(source: base_entity) dict
+        #_build_reference(source: base_entity) dict
     }
 
-    class basic_converter {
-        +convert(field_name: str, value) dict
+    class nomenclature_report_data_builder {
+        +build(source: nomenclature_model) dict
     }
 
-    class datetime_converter {
-        +convert(field_name: str, value) dict
+    class range_report_data_builder {
+        +build(source: range_model) dict
     }
 
-    class reference_converter {
-        -Callable __convert_reference
-        +convert(field_name: str, value) dict
+    class recipe_report_data_builder {
+        +build(source: recipe_model) dict
     }
 
-    class convert_factory {
-        -basic_converter __basic_converter
-        -datetime_converter __datetime_converter
-        -reference_converter __reference_converter
-        -list __path
-        +create(value) abstract_converter
-        +convert(source) dict
+    class report_data_builder_factory {
+        -dict __builders
+        +create(source: base_entity) report_data_builder
     }
 
     class report_data_flattener {
@@ -125,28 +121,27 @@ classDiagram
 
     abstract_report ..> base_entity : source
     abstract_report ..> report_result_dto : result
-    csv_report ..> convert_factory
-    markdown_report ..> convert_factory
-    xml_report ..> convert_factory
-    text_report ..> convert_factory
-    html_report ..> convert_factory
+    csv_report ..> report_data_builder_factory
+    markdown_report ..> report_data_builder_factory
+    xml_report ..> report_data_builder_factory
+    text_report ..> report_data_builder_factory
+    html_report ..> report_data_builder_factory
     csv_report ..> report_data_flattener
     markdown_report ..> report_data_flattener
     text_report ..> report_data_flattener
     html_report ..> report_data_flattener
 
-    abstract_converter <|-- basic_converter
-    abstract_converter <|-- datetime_converter
-    abstract_converter <|-- reference_converter
-    convert_factory *-- basic_converter
-    convert_factory *-- datetime_converter
-    convert_factory *-- reference_converter
-    reference_converter ..> convert_factory : рекурсивный вызов
+    report_data_builder <|-- nomenclature_report_data_builder
+    report_data_builder <|-- range_report_data_builder
+    report_data_builder <|-- recipe_report_data_builder
+    report_data_builder_factory ..> report_data_builder : создаёт
 
     base_entity <|-- nomenclature_model
     base_entity <|-- range_model
     base_entity <|-- recipe_model
-    convert_factory ..> base_entity : преобразует
+    nomenclature_report_data_builder ..> nomenclature_model
+    range_report_data_builder ..> range_model
+    recipe_report_data_builder ..> recipe_model
 ```
 
 ## Последовательность формирования отчёта
@@ -159,7 +154,8 @@ sequenceDiagram
     participant Storage as storage_manager
     participant Factory as report_factory
     participant Report as abstract_report
-    participant ConvertFactory as convert_factory
+    participant BuilderFactory as report_data_builder_factory
+    participant Builder as конкретный report_data_builder
     participant Flattener as report_data_flattener
     participant Result as report_result_dto
 
@@ -180,10 +176,10 @@ sequenceDiagram
 
         Factory-->>API: report
         API->>Report: build(entity)
-        Report->>ConvertFactory: convert(entity)
-        ConvertFactory->>ConvertFactory: рекурсивно преобразовать поля через конвертеры
-        ConvertFactory-->>Report: словарь данных сущности
-        Note over Report: добавить имя корневой сущности
+        Report->>BuilderFactory: create(entity)
+        BuilderFactory-->>Report: builder
+        Report->>Builder: build(entity)
+        Builder-->>Report: данные сущности
         opt Плоский формат отчёта
             Report->>Flattener: flatten(data)
             Flattener-->>Report: список полей и значений

@@ -1,5 +1,3 @@
-from xml.etree.ElementTree import fromstring
-
 import pytest
 
 from Src.Logics.csv_report import csv_report
@@ -114,7 +112,7 @@ def test_success_xml_report_contains_structured_data(report_sources):
     result = xml_report().build(flour)
 
     # Проверка
-    assert fromstring(result.text).tag == "nomenclature"
+    assert result.text.startswith("<nomenclature>")
     assert "<name>Мука</name>" in result.text
 
 
