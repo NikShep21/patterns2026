@@ -1,7 +1,6 @@
 from datetime import date
 from enum import Enum
 
-from Src.Core.Abstract import base_entity
 from Src.Core.Exceptions import operation_error
 from Src.Core.abstract_converter import abstract_converter
 from Src.Logics.basic_converter import basic_converter
@@ -66,14 +65,8 @@ class convert_factory:
     def __convert_object(self, source) -> dict:
         """Преобразует публичные свойства объекта во вложенный словарь."""
         if any(item is source for item in self.__path):
-            if isinstance(source, base_entity):
-                return {
-                    "id": source.id,
-                    "name": source.name,
-                }
-
             raise operation_error(
-                "Обнаружена циклическая ссылка на объект без идентификатора"
+                "Невозможно преобразовать объект с циклическими ссылками"
             )
 
         self.__path.append(source)

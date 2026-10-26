@@ -112,20 +112,16 @@ def test_success_convert_factory_converts_nested_model():
     assert result["range"]["name"] == "Грамм"
 
 
-def test_success_convert_factory_stops_cyclic_reference():
-    """Проверяет завершение рекурсии для явно созданной самоссылки."""
+@pytest.mark.parametrize("indirect", (False, True), ids=("self-reference", "two-objects"))
+def test_fail_convert_factory_cyclic_reference_raises_operation_error(indirect):
+    """Проверяет ошибку для самоссылки и цикла между двумя моделями."""
     # Подготовка
     gram = range_model.create_gram()
-    gram.base_range = gram
+    gram.base_range = range_model("Килограмм", 1000, gram) if indirect else gram
 
-    # Действие
-    result = convert_factory().convert(gram)
-
-    # Проверка
-    assert result["base_range"] == {
-        "id": gram.id,
-        "name": "Грамм",
-    }
+    # Действие / Проверка
+    with pytest.raises(operation_error, match="циклическими ссылками"):
+        convert_factory().convert(gram)
 
 
 def test_success_convert_factory_converts_unit_without_cycle():

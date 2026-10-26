@@ -36,11 +36,7 @@ classDiagram
         -__get_field_names(source) list
     }
 
-    class base_entity {
-        <<abstract>>
-        +id str
-        +name str
-    }
+    class operation_error
 
     abstract_converter <|-- basic_converter
     abstract_converter <|-- datetime_converter
@@ -50,7 +46,7 @@ classDiagram
     convert_factory *-- datetime_converter
     convert_factory *-- reference_converter
     reference_converter ..> convert_factory : рекурсивный вызов
-    convert_factory ..> base_entity : преобразует
+    convert_factory ..> operation_error : циклическая ссылка
 ```
 
 ## Последовательность конвертации
