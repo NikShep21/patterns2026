@@ -11,6 +11,12 @@ classDiagram
         +convert(field_name: str, value) dict
     }
 
+    class abstract_convert_factory {
+        <<abstract>>
+        +create(value) abstract_converter
+        +convert(source) dict
+    }
+
     class basic_converter {
         +convert(field_name: str, value) dict
     }
@@ -20,7 +26,8 @@ classDiagram
     }
 
     class reference_converter {
-        -Callable __convert_reference
+        -abstract_convert_factory __factory
+        +__init__(factory: abstract_convert_factory)
         +convert(field_name: str, value) dict
     }
 
@@ -41,11 +48,12 @@ classDiagram
     abstract_converter <|-- basic_converter
     abstract_converter <|-- datetime_converter
     abstract_converter <|-- reference_converter
+    abstract_convert_factory <|-- convert_factory
 
     convert_factory *-- basic_converter
     convert_factory *-- datetime_converter
     convert_factory *-- reference_converter
-    reference_converter ..> convert_factory : рекурсивный вызов
+    reference_converter --> abstract_convert_factory : преобразует вложенный объект
     convert_factory ..> operation_error : циклическая ссылка
 ```
 
@@ -60,9 +68,8 @@ sequenceDiagram
     participant Reference as reference_converter
 
     Client->>Factory: convert(source)
-    Factory->>Factory: __convert_field("value", source)
-    Factory->>Reference: convert("value", source)
-    Reference->>Factory: __convert_object(source)
+    Factory->>Factory: __convert_object(source)
+    Factory->>Factory: проверить отсутствие цикла
     Factory->>Factory: получить публичные свойства
 
     loop Для каждого свойства
@@ -81,13 +88,12 @@ sequenceDiagram
         else Ссылка на объект
             Factory->>Factory: create(value)
             Factory->>Reference: convert(field_name, value)
-            Reference->>Factory: рекурсивно преобразовать объект
+            Reference->>Factory: convert(value) через abstract_convert_factory
+            Factory->>Factory: __convert_object(value)
             Factory-->>Reference: вложенный словарь
             Reference-->>Factory: {field_name: dictionary}
         end
     end
 
-    Factory-->>Reference: словарь полей объекта
-    Reference-->>Factory: {value: словарь}
     Factory-->>Client: словарь исходной структуры
 ```

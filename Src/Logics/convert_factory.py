@@ -2,22 +2,21 @@ from datetime import date
 from enum import Enum
 
 from Src.Core.Exceptions import operation_error
+from Src.Core.abstract_convert_factory import abstract_convert_factory
 from Src.Core.abstract_converter import abstract_converter
 from Src.Logics.basic_converter import basic_converter
 from Src.Logics.datetime_converter import datetime_converter
 from Src.Logics.reference_converter import reference_converter
 
 
-class convert_factory:
+class convert_factory(abstract_convert_factory):
     """Рекурсивно преобразует объекты в словари по исходной структуре."""
 
     def __init__(self):
         """Инициализирует доступные конвертеры и путь преобразования."""
         self.__basic_converter = basic_converter()
         self.__datetime_converter = datetime_converter()
-        self.__reference_converter = reference_converter(
-            self.__convert_object,
-        )
+        self.__reference_converter = reference_converter(self)
         self.__path: list[object] = []
 
     def create(self, value) -> abstract_converter:
@@ -35,13 +34,16 @@ class convert_factory:
 
     def convert(self, source) -> dict:
         """Преобразует объект или простое значение в словарь."""
-        result = self.__convert_field("value", source)
-        data = result["value"]
+        if isinstance(source, dict):
+            return self.__convert_field("value", source)["value"]
 
-        if isinstance(data, dict):
-            return data
+        if source is None or isinstance(
+            source,
+            (str, int, float, bool, Enum, date, list, tuple),
+        ):
+            return self.__convert_field("value", source)
 
-        return result
+        return self.__convert_object(source)
 
     def __convert_field(self, field_name: str, value) -> dict:
         """Преобразует именованное поле, раскрывая вложенные коллекции."""

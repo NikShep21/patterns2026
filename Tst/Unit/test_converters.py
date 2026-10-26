@@ -3,10 +3,28 @@ from datetime import datetime
 import pytest
 
 from Src.Core.Exceptions import validation_error
+from Src.Core.abstract_convert_factory import abstract_convert_factory
+from Src.Core.abstract_converter import abstract_converter
 from Src.Logics.basic_converter import basic_converter
 from Src.Logics.datetime_converter import datetime_converter
 from Src.Logics.reference_converter import reference_converter
 from Src.Models.nomenclature_type import nomenclature_type
+
+
+class reference_factory_stub(abstract_convert_factory):
+    """Тестовая фабрика для проверки передачи объекта конвертером."""
+
+    def __init__(self, source):
+        """Запоминает объект, который должен передать конвертер."""
+        self.__source = source
+
+    def create(self, value) -> abstract_converter:
+        """Возвращает конвертер простых значений для теста."""
+        return basic_converter()
+
+    def convert(self, source) -> dict:
+        """Сообщает, передал ли конвертер ожидаемый объект."""
+        return {"same": source is self.__source}
 
 
 @pytest.mark.parametrize(
@@ -50,7 +68,7 @@ def test_success_reference_converter_returns_nested_dictionary():
     """Проверяет преобразование ссылки на объект."""
     # Подготовка
     source = object()
-    converter = reference_converter(lambda value: {"same": value is source})
+    converter = reference_converter(reference_factory_stub(source))
 
     # Действие
     result = converter.convert("reference", source)
@@ -82,7 +100,7 @@ def test_fail_converter_invalid_value_raises_validation_error(
     (
         basic_converter(),
         datetime_converter(),
-        reference_converter(lambda value: value),
+        reference_converter(reference_factory_stub(object())),
     ),
     ids=("basic", "datetime", "reference"),
 )
@@ -91,3 +109,11 @@ def test_fail_converter_empty_field_name_raises_validation_error(converter):
     # Действие / Проверка
     with pytest.raises(validation_error):
         converter.convert(" ", "value")
+
+
+@pytest.mark.parametrize("factory", (None, object(), lambda value: value))
+def test_fail_reference_converter_invalid_factory_raises_validation_error(factory):
+    """Проверяет, что конвертер принимает реализацию абстрактной фабрики."""
+    # Действие / Проверка
+    with pytest.raises(validation_error):
+        reference_converter(factory)

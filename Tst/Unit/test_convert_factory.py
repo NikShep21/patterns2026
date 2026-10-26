@@ -3,6 +3,7 @@ from datetime import datetime
 import pytest
 
 from Src.Core.abstract_converter import abstract_converter
+from Src.Core.abstract_convert_factory import abstract_convert_factory
 from Src.Core.Exceptions import operation_error
 from Src.Logics.basic_converter import basic_converter
 from Src.Logics.convert_factory import convert_factory
@@ -55,6 +56,7 @@ def test_success_convert_factory_selects_converter(value, expected_type):
     # Проверка
     assert isinstance(result, abstract_converter)
     assert isinstance(result, expected_type)
+    assert isinstance(factory, abstract_convert_factory)
 
 
 def test_success_convert_factory_converts_simple_value():
