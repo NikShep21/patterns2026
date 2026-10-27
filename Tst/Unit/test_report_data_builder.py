@@ -62,6 +62,24 @@ def test_success_report_data_builder_builds_range(report_entities):
     assert data["base_range"] is None
 
 
+def test_success_report_data_builder_builds_derived_range():
+    """Проверяет данные производной единицы со ссылкой на базовую."""
+    # Подготовка
+    kilogram = range_model.create_kilogram()
+    gram = kilogram.base_range
+
+    # Действие
+    data = range_report_data_builder().build(kilogram)["range"]
+
+    # Проверка
+    assert data == {
+        "id": kilogram.id,
+        "name": "Килограмм",
+        "coefficient": 1000,
+        "base_range": {"id": gram.id, "name": "Грамм"},
+    }
+
+
 def test_success_report_data_builder_builds_nomenclature(report_entities):
     """Проверяет состав данных номенклатуры."""
     # Подготовка

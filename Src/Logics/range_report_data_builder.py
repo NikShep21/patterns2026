@@ -12,9 +12,6 @@ class range_report_data_builder(report_data_builder):
                 "id": source.id,
                 "name": source.name,
                 "coefficient": source.coefficient,
-                "base_range": (
-                    self._build_reference(source.base_range)
-                    if source.base_range is not None else None
-                ),
+                "base_range": self._build_reference(source.base_range),
             }
         }
