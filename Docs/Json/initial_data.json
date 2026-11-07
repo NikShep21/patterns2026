@@ -1,0 +1,657 @@
+{
+    "is_loaded": true,
+    "ranges": [
+        {
+            "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+            "name": "Грамм",
+            "coefficient": 1,
+            "base_range": null
+        },
+        {
+            "id": "5990f380-b6ef-4580-bcf9-26e0d5664883",
+            "name": "Килограмм",
+            "coefficient": 1000,
+            "base_range": {
+                "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                "name": "Грамм",
+                "coefficient": 1,
+                "base_range": null
+            }
+        },
+        {
+            "id": "028b9742-722c-44be-ac8d-841be73ae24e",
+            "name": "Миллилитр",
+            "coefficient": 1,
+            "base_range": null
+        },
+        {
+            "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+            "name": "Штука",
+            "coefficient": 1,
+            "base_range": null
+        }
+    ],
+    "groups": [
+        {
+            "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+            "name": "Ингредиенты"
+        },
+        {
+            "id": "e3ef2500-14d6-480d-a37f-10810fece5da",
+            "name": "Полуфабрикаты"
+        },
+        {
+            "id": "7b2bef84-afed-436d-b372-227e7beb0c04",
+            "name": "Готовые блюда"
+        },
+        {
+            "id": "613b5f8b-2a61-472f-909f-28a5fa95614c",
+            "name": "Упаковка"
+        }
+    ],
+    "nomenclature": [
+        {
+            "id": "758084e2-a978-4181-8953-4bf68df5affe",
+            "name": "Мука",
+            "full_name": "Мука пшеничная высшего сорта",
+            "type": "Сырьё",
+            "group": {
+                "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                "name": "Ингредиенты"
+            },
+            "range": {
+                "id": "5990f380-b6ef-4580-bcf9-26e0d5664883",
+                "name": "Килограмм",
+                "coefficient": 1000,
+                "base_range": {
+                    "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                    "name": "Грамм",
+                    "coefficient": 1,
+                    "base_range": null
+                }
+            }
+        },
+        {
+            "id": "908b622c-63ae-4335-bb8a-9b8a26f83ae2",
+            "name": "Молоко",
+            "full_name": "Молоко питьевое пастеризованное",
+            "type": "Сырьё",
+            "group": {
+                "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                "name": "Ингредиенты"
+            },
+            "range": {
+                "id": "028b9742-722c-44be-ac8d-841be73ae24e",
+                "name": "Миллилитр",
+                "coefficient": 1,
+                "base_range": null
+            }
+        },
+        {
+            "id": "eb32e7a8-c355-426d-a4e7-15f767d33a74",
+            "name": "Яйцо",
+            "full_name": "Яйцо куриное пищевое",
+            "type": "Сырьё",
+            "group": {
+                "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                "name": "Ингредиенты"
+            },
+            "range": {
+                "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+                "name": "Штука",
+                "coefficient": 1,
+                "base_range": null
+            }
+        },
+        {
+            "id": "d41f8ade-8cf9-40b8-a74d-b7d83dceb701",
+            "name": "Сахар",
+            "full_name": "Сахар белый кристаллический",
+            "type": "Сырьё",
+            "group": {
+                "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                "name": "Ингредиенты"
+            },
+            "range": {
+                "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                "name": "Грамм",
+                "coefficient": 1,
+                "base_range": null
+            }
+        },
+        {
+            "id": "3f7736dc-2dcf-4d80-9aa9-3fb67fa695f8",
+            "name": "Соль",
+            "full_name": "Соль поваренная пищевая",
+            "type": "Сырьё",
+            "group": {
+                "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                "name": "Ингредиенты"
+            },
+            "range": {
+                "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                "name": "Грамм",
+                "coefficient": 1,
+                "base_range": null
+            }
+        },
+        {
+            "id": "04ea2c25-6291-446a-b4ae-0699bf43de86",
+            "name": "Масло растительное",
+            "full_name": "Масло подсолнечное рафинированное",
+            "type": "Сырьё",
+            "group": {
+                "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                "name": "Ингредиенты"
+            },
+            "range": {
+                "id": "028b9742-722c-44be-ac8d-841be73ae24e",
+                "name": "Миллилитр",
+                "coefficient": 1,
+                "base_range": null
+            }
+        },
+        {
+            "id": "b5eb3871-946e-4cf7-b279-feaff24f7175",
+            "name": "Тесто для блинов",
+            "full_name": "Тесто для классических блинов",
+            "type": "Полуфабрикат",
+            "group": {
+                "id": "e3ef2500-14d6-480d-a37f-10810fece5da",
+                "name": "Полуфабрикаты"
+            },
+            "range": {
+                "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                "name": "Грамм",
+                "coefficient": 1,
+                "base_range": null
+            }
+        },
+        {
+            "id": "59528a00-7fa7-41ca-b709-228ca33b3c9c",
+            "name": "Блины",
+            "full_name": "Блины классические готовые",
+            "type": "Блюдо",
+            "group": {
+                "id": "7b2bef84-afed-436d-b372-227e7beb0c04",
+                "name": "Готовые блюда"
+            },
+            "range": {
+                "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+                "name": "Штука",
+                "coefficient": 1,
+                "base_range": null
+            }
+        },
+        {
+            "id": "2a56eed0-01e3-417a-9cd5-170ec8821b8d",
+            "name": "Упаковка для блинов",
+            "full_name": "Контейнер для готовых блинов",
+            "type": "Упаковка",
+            "group": {
+                "id": "613b5f8b-2a61-472f-909f-28a5fa95614c",
+                "name": "Упаковка"
+            },
+            "range": {
+                "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+                "name": "Штука",
+                "coefficient": 1,
+                "base_range": null
+            }
+        }
+    ],
+    "warehouses": [
+        {
+            "id": "2bb0f0a2-759c-4d37-a3d1-8f1895f1ca1c",
+            "name": "Основной склад",
+            "address": "ул. Центральная, д. 1"
+        }
+    ],
+    "recipes": [
+        {
+            "id": "af6959bc-450b-43ac-a880-98add05d0c8f",
+            "name": "Тесто для блинов",
+            "result": {
+                "id": "b5eb3871-946e-4cf7-b279-feaff24f7175",
+                "name": "Тесто для блинов",
+                "full_name": "Тесто для классических блинов",
+                "type": "Полуфабрикат",
+                "group": {
+                    "id": "e3ef2500-14d6-480d-a37f-10810fece5da",
+                    "name": "Полуфабрикаты"
+                },
+                "range": {
+                    "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                    "name": "Грамм",
+                    "coefficient": 1,
+                    "base_range": null
+                }
+            },
+            "ingredients": [
+                {
+                    "id": "966a094c-ab04-4f8c-8ec8-1ee0bc088d26",
+                    "name": "Мука",
+                    "nomenclature": {
+                        "id": "758084e2-a978-4181-8953-4bf68df5affe",
+                        "name": "Мука",
+                        "full_name": "Мука пшеничная высшего сорта",
+                        "type": "Сырьё",
+                        "group": {
+                            "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                            "name": "Ингредиенты"
+                        },
+                        "range": {
+                            "id": "5990f380-b6ef-4580-bcf9-26e0d5664883",
+                            "name": "Килограмм",
+                            "coefficient": 1000,
+                            "base_range": {
+                                "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                                "name": "Грамм",
+                                "coefficient": 1,
+                                "base_range": null
+                            }
+                        }
+                    },
+                    "quantity": 0.2,
+                    "recipe": null,
+                    "gross_weight": 200,
+                    "net_weight": 200
+                },
+                {
+                    "id": "cccfd4bc-e8db-4ca9-8462-457ac938868a",
+                    "name": "Молоко",
+                    "nomenclature": {
+                        "id": "908b622c-63ae-4335-bb8a-9b8a26f83ae2",
+                        "name": "Молоко",
+                        "full_name": "Молоко питьевое пастеризованное",
+                        "type": "Сырьё",
+                        "group": {
+                            "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                            "name": "Ингредиенты"
+                        },
+                        "range": {
+                            "id": "028b9742-722c-44be-ac8d-841be73ae24e",
+                            "name": "Миллилитр",
+                            "coefficient": 1,
+                            "base_range": null
+                        }
+                    },
+                    "quantity": 500,
+                    "recipe": null,
+                    "gross_weight": 500,
+                    "net_weight": 500
+                },
+                {
+                    "id": "49dac9f5-7d46-4a86-852c-b4412e220f60",
+                    "name": "Яйцо",
+                    "nomenclature": {
+                        "id": "eb32e7a8-c355-426d-a4e7-15f767d33a74",
+                        "name": "Яйцо",
+                        "full_name": "Яйцо куриное пищевое",
+                        "type": "Сырьё",
+                        "group": {
+                            "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                            "name": "Ингредиенты"
+                        },
+                        "range": {
+                            "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+                            "name": "Штука",
+                            "coefficient": 1,
+                            "base_range": null
+                        }
+                    },
+                    "quantity": 2,
+                    "recipe": null,
+                    "gross_weight": 120,
+                    "net_weight": 100
+                },
+                {
+                    "id": "907cdb83-a1cf-4241-bdb1-8d1c2cf8b0a2",
+                    "name": "Сахар",
+                    "nomenclature": {
+                        "id": "d41f8ade-8cf9-40b8-a74d-b7d83dceb701",
+                        "name": "Сахар",
+                        "full_name": "Сахар белый кристаллический",
+                        "type": "Сырьё",
+                        "group": {
+                            "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                            "name": "Ингредиенты"
+                        },
+                        "range": {
+                            "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                            "name": "Грамм",
+                            "coefficient": 1,
+                            "base_range": null
+                        }
+                    },
+                    "quantity": 30,
+                    "recipe": null,
+                    "gross_weight": 30,
+                    "net_weight": 30
+                },
+                {
+                    "id": "15083876-56d2-45fd-8ecc-5513cb456b29",
+                    "name": "Соль",
+                    "nomenclature": {
+                        "id": "3f7736dc-2dcf-4d80-9aa9-3fb67fa695f8",
+                        "name": "Соль",
+                        "full_name": "Соль поваренная пищевая",
+                        "type": "Сырьё",
+                        "group": {
+                            "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                            "name": "Ингредиенты"
+                        },
+                        "range": {
+                            "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                            "name": "Грамм",
+                            "coefficient": 1,
+                            "base_range": null
+                        }
+                    },
+                    "quantity": 2,
+                    "recipe": null,
+                    "gross_weight": 2,
+                    "net_weight": 2
+                },
+                {
+                    "id": "468fef76-3e6a-4318-9cdc-3094e4f9bd61",
+                    "name": "Масло растительное",
+                    "nomenclature": {
+                        "id": "04ea2c25-6291-446a-b4ae-0699bf43de86",
+                        "name": "Масло растительное",
+                        "full_name": "Масло подсолнечное рафинированное",
+                        "type": "Сырьё",
+                        "group": {
+                            "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                            "name": "Ингредиенты"
+                        },
+                        "range": {
+                            "id": "028b9742-722c-44be-ac8d-841be73ae24e",
+                            "name": "Миллилитр",
+                            "coefficient": 1,
+                            "base_range": null
+                        }
+                    },
+                    "quantity": 30,
+                    "recipe": null,
+                    "gross_weight": 30,
+                    "net_weight": 30
+                }
+            ],
+            "output_quantity": 862,
+            "cooking_time": 10,
+            "steps": [
+                "Взбить яйца с сахаром и солью.",
+                "Добавить половину молока и перемешать.",
+                "Постепенно всыпать муку и размешать тесто.",
+                "Добавить оставшееся молоко и растительное масло.",
+                "Оставить тесто на 10 минут."
+            ],
+            "gross_weight": 882,
+            "net_weight": 862
+        },
+        {
+            "id": "287120de-f1c3-4c56-82d0-c1bc876fb34e",
+            "name": "Классические блины",
+            "result": {
+                "id": "59528a00-7fa7-41ca-b709-228ca33b3c9c",
+                "name": "Блины",
+                "full_name": "Блины классические готовые",
+                "type": "Блюдо",
+                "group": {
+                    "id": "7b2bef84-afed-436d-b372-227e7beb0c04",
+                    "name": "Готовые блюда"
+                },
+                "range": {
+                    "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+                    "name": "Штука",
+                    "coefficient": 1,
+                    "base_range": null
+                }
+            },
+            "ingredients": [
+                {
+                    "id": "3ef19171-c58a-45ea-ac8a-b972c1b5a56d",
+                    "name": "Тесто для блинов",
+                    "nomenclature": {
+                        "id": "b5eb3871-946e-4cf7-b279-feaff24f7175",
+                        "name": "Тесто для блинов",
+                        "full_name": "Тесто для классических блинов",
+                        "type": "Полуфабрикат",
+                        "group": {
+                            "id": "e3ef2500-14d6-480d-a37f-10810fece5da",
+                            "name": "Полуфабрикаты"
+                        },
+                        "range": {
+                            "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                            "name": "Грамм",
+                            "coefficient": 1,
+                            "base_range": null
+                        }
+                    },
+                    "quantity": 862,
+                    "recipe": {
+                        "id": "af6959bc-450b-43ac-a880-98add05d0c8f",
+                        "name": "Тесто для блинов",
+                        "result": {
+                            "id": "b5eb3871-946e-4cf7-b279-feaff24f7175",
+                            "name": "Тесто для блинов",
+                            "full_name": "Тесто для классических блинов",
+                            "type": "Полуфабрикат",
+                            "group": {
+                                "id": "e3ef2500-14d6-480d-a37f-10810fece5da",
+                                "name": "Полуфабрикаты"
+                            },
+                            "range": {
+                                "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                                "name": "Грамм",
+                                "coefficient": 1,
+                                "base_range": null
+                            }
+                        },
+                        "ingredients": [
+                            {
+                                "id": "966a094c-ab04-4f8c-8ec8-1ee0bc088d26",
+                                "name": "Мука",
+                                "nomenclature": {
+                                    "id": "758084e2-a978-4181-8953-4bf68df5affe",
+                                    "name": "Мука",
+                                    "full_name": "Мука пшеничная высшего сорта",
+                                    "type": "Сырьё",
+                                    "group": {
+                                        "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                                        "name": "Ингредиенты"
+                                    },
+                                    "range": {
+                                        "id": "5990f380-b6ef-4580-bcf9-26e0d5664883",
+                                        "name": "Килограмм",
+                                        "coefficient": 1000,
+                                        "base_range": {
+                                            "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                                            "name": "Грамм",
+                                            "coefficient": 1,
+                                            "base_range": null
+                                        }
+                                    }
+                                },
+                                "quantity": 0.2,
+                                "recipe": null,
+                                "gross_weight": 200,
+                                "net_weight": 200
+                            },
+                            {
+                                "id": "cccfd4bc-e8db-4ca9-8462-457ac938868a",
+                                "name": "Молоко",
+                                "nomenclature": {
+                                    "id": "908b622c-63ae-4335-bb8a-9b8a26f83ae2",
+                                    "name": "Молоко",
+                                    "full_name": "Молоко питьевое пастеризованное",
+                                    "type": "Сырьё",
+                                    "group": {
+                                        "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                                        "name": "Ингредиенты"
+                                    },
+                                    "range": {
+                                        "id": "028b9742-722c-44be-ac8d-841be73ae24e",
+                                        "name": "Миллилитр",
+                                        "coefficient": 1,
+                                        "base_range": null
+                                    }
+                                },
+                                "quantity": 500,
+                                "recipe": null,
+                                "gross_weight": 500,
+                                "net_weight": 500
+                            },
+                            {
+                                "id": "49dac9f5-7d46-4a86-852c-b4412e220f60",
+                                "name": "Яйцо",
+                                "nomenclature": {
+                                    "id": "eb32e7a8-c355-426d-a4e7-15f767d33a74",
+                                    "name": "Яйцо",
+                                    "full_name": "Яйцо куриное пищевое",
+                                    "type": "Сырьё",
+                                    "group": {
+                                        "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                                        "name": "Ингредиенты"
+                                    },
+                                    "range": {
+                                        "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+                                        "name": "Штука",
+                                        "coefficient": 1,
+                                        "base_range": null
+                                    }
+                                },
+                                "quantity": 2,
+                                "recipe": null,
+                                "gross_weight": 120,
+                                "net_weight": 100
+                            },
+                            {
+                                "id": "907cdb83-a1cf-4241-bdb1-8d1c2cf8b0a2",
+                                "name": "Сахар",
+                                "nomenclature": {
+                                    "id": "d41f8ade-8cf9-40b8-a74d-b7d83dceb701",
+                                    "name": "Сахар",
+                                    "full_name": "Сахар белый кристаллический",
+                                    "type": "Сырьё",
+                                    "group": {
+                                        "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                                        "name": "Ингредиенты"
+                                    },
+                                    "range": {
+                                        "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                                        "name": "Грамм",
+                                        "coefficient": 1,
+                                        "base_range": null
+                                    }
+                                },
+                                "quantity": 30,
+                                "recipe": null,
+                                "gross_weight": 30,
+                                "net_weight": 30
+                            },
+                            {
+                                "id": "15083876-56d2-45fd-8ecc-5513cb456b29",
+                                "name": "Соль",
+                                "nomenclature": {
+                                    "id": "3f7736dc-2dcf-4d80-9aa9-3fb67fa695f8",
+                                    "name": "Соль",
+                                    "full_name": "Соль поваренная пищевая",
+                                    "type": "Сырьё",
+                                    "group": {
+                                        "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                                        "name": "Ингредиенты"
+                                    },
+                                    "range": {
+                                        "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                                        "name": "Грамм",
+                                        "coefficient": 1,
+                                        "base_range": null
+                                    }
+                                },
+                                "quantity": 2,
+                                "recipe": null,
+                                "gross_weight": 2,
+                                "net_weight": 2
+                            },
+                            {
+                                "id": "468fef76-3e6a-4318-9cdc-3094e4f9bd61",
+                                "name": "Масло растительное",
+                                "nomenclature": {
+                                    "id": "04ea2c25-6291-446a-b4ae-0699bf43de86",
+                                    "name": "Масло растительное",
+                                    "full_name": "Масло подсолнечное рафинированное",
+                                    "type": "Сырьё",
+                                    "group": {
+                                        "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                                        "name": "Ингредиенты"
+                                    },
+                                    "range": {
+                                        "id": "028b9742-722c-44be-ac8d-841be73ae24e",
+                                        "name": "Миллилитр",
+                                        "coefficient": 1,
+                                        "base_range": null
+                                    }
+                                },
+                                "quantity": 30,
+                                "recipe": null,
+                                "gross_weight": 30,
+                                "net_weight": 30
+                            }
+                        ],
+                        "output_quantity": 862,
+                        "cooking_time": 10,
+                        "steps": [
+                            "Взбить яйца с сахаром и солью.",
+                            "Добавить половину молока и перемешать.",
+                            "Постепенно всыпать муку и размешать тесто.",
+                            "Добавить оставшееся молоко и растительное масло.",
+                            "Оставить тесто на 10 минут."
+                        ],
+                        "gross_weight": 882,
+                        "net_weight": 862
+                    },
+                    "gross_weight": 882,
+                    "net_weight": 862
+                },
+                {
+                    "id": "e16aa595-6b02-4d6c-8bdf-fa3d2b962f17",
+                    "name": "Упаковка для блинов",
+                    "nomenclature": {
+                        "id": "2a56eed0-01e3-417a-9cd5-170ec8821b8d",
+                        "name": "Упаковка для блинов",
+                        "full_name": "Контейнер для готовых блинов",
+                        "type": "Упаковка",
+                        "group": {
+                            "id": "613b5f8b-2a61-472f-909f-28a5fa95614c",
+                            "name": "Упаковка"
+                        },
+                        "range": {
+                            "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+                            "name": "Штука",
+                            "coefficient": 1,
+                            "base_range": null
+                        }
+                    },
+                    "quantity": 1,
+                    "recipe": null,
+                    "gross_weight": 20,
+                    "net_weight": 20
+                }
+            ],
+            "output_quantity": 10,
+            "cooking_time": 30,
+            "steps": [
+                "Взбить яйца с сахаром и солью.",
+                "Добавить половину молока и перемешать.",
+                "Постепенно всыпать муку и размешать тесто.",
+                "Добавить оставшееся молоко и растительное масло.",
+                "Оставить тесто на 10 минут.",
+                "Выпекать блины с двух сторон до золотистого цвета."
+            ],
+            "gross_weight": 902,
+            "net_weight": 862
+        }
+    ]
+}

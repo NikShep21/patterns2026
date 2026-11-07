@@ -12,7 +12,7 @@ def test_success_create_gram_returns_base_gram():
     # Проверка
     assert gram.name == "Грамм"
     assert gram.coefficient == 1
-    assert gram.base_range is gram
+    assert gram.base_range is None
 
 
 def test_success_create_kilogram_returns_unit_based_on_gram():
@@ -25,7 +25,7 @@ def test_success_create_kilogram_returns_unit_based_on_gram():
     assert kilogram.coefficient == 1000
     assert kilogram.base_range.name == "Грамм"
     assert kilogram.base_range.coefficient == 1
-    assert kilogram.base_range.base_range is kilogram.base_range
+    assert kilogram.base_range.base_range is None
 
 
 @pytest.mark.parametrize(
@@ -47,12 +47,12 @@ def test_success_create_base_range_returns_expected_unit(
     # Проверка
     assert unit.name == expected_name
     assert unit.coefficient == 1
-    assert unit.base_range is unit
+    assert unit.base_range is None
 
 
-def test_success_init_without_base_range_returns_self_as_base_range():
+def test_success_init_without_base_range_returns_none():
     """
-    Базовая единица устанавливается базой для самой себя.
+    У базовой единицы отсутствует ссылка на другую единицу.
     """
     # Действие
     gram = range_model("грамм", 1)
@@ -60,7 +60,7 @@ def test_success_init_without_base_range_returns_self_as_base_range():
     # Проверка
     assert gram.name == "грамм"
     assert gram.coefficient == 1
-    assert gram.base_range is gram
+    assert gram.base_range is None
 
 
 def test_success_init_with_base_range_returns_passed_base_range():
@@ -75,6 +75,18 @@ def test_success_init_with_base_range_returns_passed_base_range():
 
     # Проверка
     assert kilogram.base_range is gram
+
+
+def test_success_base_range_can_be_cleared():
+    """Проверяет возможность убрать ссылку на базовую единицу."""
+    # Подготовка
+    unit = range_model.create_kilogram()
+
+    # Действие
+    unit.base_range = None
+
+    # Проверка
+    assert unit.base_range is None
 
 
 def test_success_init_float_coefficient_returns_same_coefficient():

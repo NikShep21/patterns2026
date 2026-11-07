@@ -59,7 +59,7 @@ classDiagram
     class report_data_builder {
         <<abstract>>
         +build(source: base_entity) dict
-        #_build_reference(source: base_entity) dict
+        #_build_reference(source: base_entity_or_None) dict_or_None
     }
 
     class nomenclature_report_data_builder {
