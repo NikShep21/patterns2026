@@ -1,25 +1,27 @@
+from Src.Dtos.report_data_dto import report_data_dto, report_node_dto
+
+
 class report_data_flattener:
     """Преобразует вложенные данные отчёта в плоский список."""
 
     @classmethod
-    def flatten(cls, data: dict) -> list[tuple[str, str]]:
-        """Возвращает список путей и значений вложенного словаря."""
+    def flatten(cls, data: report_data_dto) -> list[tuple[str, str]]:
+        """Возвращает список путей и значений полей отчёта."""
         result = []
-        cls.__flatten_value(data, "", result)
+        cls.__flatten_value(data, data.root_name, result)
         return result
 
     @classmethod
     def __flatten_value(
         cls,
-        value,
+        value: object,
         path: str,
         result: list[tuple[str, str]],
     ) -> None:
         """Рекурсивно добавляет простые значения в плоский список."""
-        if isinstance(value, dict):
-            for key, item in value.items():
-                item_path = f"{path}.{key}" if path else key
-                cls.__flatten_value(item, item_path, result)
+        if isinstance(value, report_node_dto):
+            for name, item in value.iter_fields():
+                cls.__flatten_value(item, f"{path}.{name}", result)
             return
 
         if isinstance(value, (list, tuple)):
