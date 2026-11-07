@@ -3,16 +3,19 @@
     "ranges": [
         {
             "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+            "model_type": "range_model",
             "name": "Грамм",
             "coefficient": 1,
             "base_range": null
         },
         {
             "id": "5990f380-b6ef-4580-bcf9-26e0d5664883",
+            "model_type": "range_model",
             "name": "Килограмм",
             "coefficient": 1000,
             "base_range": {
                 "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                "model_type": "range_model",
                 "name": "Грамм",
                 "coefficient": 1,
                 "base_range": null
@@ -20,12 +23,14 @@
         },
         {
             "id": "028b9742-722c-44be-ac8d-841be73ae24e",
+            "model_type": "range_model",
             "name": "Миллилитр",
             "coefficient": 1,
             "base_range": null
         },
         {
             "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+            "model_type": "range_model",
             "name": "Штука",
             "coefficient": 1,
             "base_range": null
@@ -34,37 +39,45 @@
     "groups": [
         {
             "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+            "model_type": "nomenclature_group_model",
             "name": "Ингредиенты"
         },
         {
             "id": "e3ef2500-14d6-480d-a37f-10810fece5da",
+            "model_type": "nomenclature_group_model",
             "name": "Полуфабрикаты"
         },
         {
             "id": "7b2bef84-afed-436d-b372-227e7beb0c04",
+            "model_type": "nomenclature_group_model",
             "name": "Готовые блюда"
         },
         {
             "id": "613b5f8b-2a61-472f-909f-28a5fa95614c",
+            "model_type": "nomenclature_group_model",
             "name": "Упаковка"
         }
     ],
     "nomenclature": [
         {
             "id": "758084e2-a978-4181-8953-4bf68df5affe",
+            "model_type": "nomenclature_model",
             "name": "Мука",
             "full_name": "Мука пшеничная высшего сорта",
             "type": "Сырьё",
             "group": {
                 "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                "model_type": "nomenclature_group_model",
                 "name": "Ингредиенты"
             },
             "range": {
                 "id": "5990f380-b6ef-4580-bcf9-26e0d5664883",
+                "model_type": "range_model",
                 "name": "Килограмм",
                 "coefficient": 1000,
                 "base_range": {
                     "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                    "model_type": "range_model",
                     "name": "Грамм",
                     "coefficient": 1,
                     "base_range": null
@@ -73,15 +86,18 @@
         },
         {
             "id": "908b622c-63ae-4335-bb8a-9b8a26f83ae2",
+            "model_type": "nomenclature_model",
             "name": "Молоко",
             "full_name": "Молоко питьевое пастеризованное",
             "type": "Сырьё",
             "group": {
                 "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                "model_type": "nomenclature_group_model",
                 "name": "Ингредиенты"
             },
             "range": {
                 "id": "028b9742-722c-44be-ac8d-841be73ae24e",
+                "model_type": "range_model",
                 "name": "Миллилитр",
                 "coefficient": 1,
                 "base_range": null
@@ -89,15 +105,18 @@
         },
         {
             "id": "eb32e7a8-c355-426d-a4e7-15f767d33a74",
+            "model_type": "nomenclature_model",
             "name": "Яйцо",
             "full_name": "Яйцо куриное пищевое",
             "type": "Сырьё",
             "group": {
                 "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                "model_type": "nomenclature_group_model",
                 "name": "Ингредиенты"
             },
             "range": {
                 "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+                "model_type": "range_model",
                 "name": "Штука",
                 "coefficient": 1,
                 "base_range": null
@@ -105,15 +124,18 @@
         },
         {
             "id": "d41f8ade-8cf9-40b8-a74d-b7d83dceb701",
+            "model_type": "nomenclature_model",
             "name": "Сахар",
             "full_name": "Сахар белый кристаллический",
             "type": "Сырьё",
             "group": {
                 "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                "model_type": "nomenclature_group_model",
                 "name": "Ингредиенты"
             },
             "range": {
                 "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                "model_type": "range_model",
                 "name": "Грамм",
                 "coefficient": 1,
                 "base_range": null
@@ -121,15 +143,18 @@
         },
         {
             "id": "3f7736dc-2dcf-4d80-9aa9-3fb67fa695f8",
+            "model_type": "nomenclature_model",
             "name": "Соль",
             "full_name": "Соль поваренная пищевая",
             "type": "Сырьё",
             "group": {
                 "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                "model_type": "nomenclature_group_model",
                 "name": "Ингредиенты"
             },
             "range": {
                 "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                "model_type": "range_model",
                 "name": "Грамм",
                 "coefficient": 1,
                 "base_range": null
@@ -137,15 +162,18 @@
         },
         {
             "id": "04ea2c25-6291-446a-b4ae-0699bf43de86",
+            "model_type": "nomenclature_model",
             "name": "Масло растительное",
             "full_name": "Масло подсолнечное рафинированное",
             "type": "Сырьё",
             "group": {
                 "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                "model_type": "nomenclature_group_model",
                 "name": "Ингредиенты"
             },
             "range": {
                 "id": "028b9742-722c-44be-ac8d-841be73ae24e",
+                "model_type": "range_model",
                 "name": "Миллилитр",
                 "coefficient": 1,
                 "base_range": null
@@ -153,15 +181,18 @@
         },
         {
             "id": "b5eb3871-946e-4cf7-b279-feaff24f7175",
+            "model_type": "nomenclature_model",
             "name": "Тесто для блинов",
             "full_name": "Тесто для классических блинов",
             "type": "Полуфабрикат",
             "group": {
                 "id": "e3ef2500-14d6-480d-a37f-10810fece5da",
+                "model_type": "nomenclature_group_model",
                 "name": "Полуфабрикаты"
             },
             "range": {
                 "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                "model_type": "range_model",
                 "name": "Грамм",
                 "coefficient": 1,
                 "base_range": null
@@ -169,15 +200,18 @@
         },
         {
             "id": "59528a00-7fa7-41ca-b709-228ca33b3c9c",
+            "model_type": "nomenclature_model",
             "name": "Блины",
             "full_name": "Блины классические готовые",
             "type": "Блюдо",
             "group": {
                 "id": "7b2bef84-afed-436d-b372-227e7beb0c04",
+                "model_type": "nomenclature_group_model",
                 "name": "Готовые блюда"
             },
             "range": {
                 "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+                "model_type": "range_model",
                 "name": "Штука",
                 "coefficient": 1,
                 "base_range": null
@@ -185,15 +219,18 @@
         },
         {
             "id": "2a56eed0-01e3-417a-9cd5-170ec8821b8d",
+            "model_type": "nomenclature_model",
             "name": "Упаковка для блинов",
             "full_name": "Контейнер для готовых блинов",
             "type": "Упаковка",
             "group": {
                 "id": "613b5f8b-2a61-472f-909f-28a5fa95614c",
+                "model_type": "nomenclature_group_model",
                 "name": "Упаковка"
             },
             "range": {
                 "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+                "model_type": "range_model",
                 "name": "Штука",
                 "coefficient": 1,
                 "base_range": null
@@ -203,6 +240,7 @@
     "warehouses": [
         {
             "id": "2bb0f0a2-759c-4d37-a3d1-8f1895f1ca1c",
+            "model_type": "warehouse_model",
             "name": "Основной склад",
             "address": "ул. Центральная, д. 1"
         }
@@ -210,18 +248,22 @@
     "recipes": [
         {
             "id": "af6959bc-450b-43ac-a880-98add05d0c8f",
+            "model_type": "recipe_model",
             "name": "Тесто для блинов",
             "result": {
                 "id": "b5eb3871-946e-4cf7-b279-feaff24f7175",
+                "model_type": "nomenclature_model",
                 "name": "Тесто для блинов",
                 "full_name": "Тесто для классических блинов",
                 "type": "Полуфабрикат",
                 "group": {
                     "id": "e3ef2500-14d6-480d-a37f-10810fece5da",
+                    "model_type": "nomenclature_group_model",
                     "name": "Полуфабрикаты"
                 },
                 "range": {
                     "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                    "model_type": "range_model",
                     "name": "Грамм",
                     "coefficient": 1,
                     "base_range": null
@@ -230,22 +272,27 @@
             "ingredients": [
                 {
                     "id": "966a094c-ab04-4f8c-8ec8-1ee0bc088d26",
+                    "model_type": "recipe_ingredient_model",
                     "name": "Мука",
                     "nomenclature": {
                         "id": "758084e2-a978-4181-8953-4bf68df5affe",
+                        "model_type": "nomenclature_model",
                         "name": "Мука",
                         "full_name": "Мука пшеничная высшего сорта",
                         "type": "Сырьё",
                         "group": {
                             "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                            "model_type": "nomenclature_group_model",
                             "name": "Ингредиенты"
                         },
                         "range": {
                             "id": "5990f380-b6ef-4580-bcf9-26e0d5664883",
+                            "model_type": "range_model",
                             "name": "Килограмм",
                             "coefficient": 1000,
                             "base_range": {
                                 "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                                "model_type": "range_model",
                                 "name": "Грамм",
                                 "coefficient": 1,
                                 "base_range": null
@@ -259,18 +306,22 @@
                 },
                 {
                     "id": "cccfd4bc-e8db-4ca9-8462-457ac938868a",
+                    "model_type": "recipe_ingredient_model",
                     "name": "Молоко",
                     "nomenclature": {
                         "id": "908b622c-63ae-4335-bb8a-9b8a26f83ae2",
+                        "model_type": "nomenclature_model",
                         "name": "Молоко",
                         "full_name": "Молоко питьевое пастеризованное",
                         "type": "Сырьё",
                         "group": {
                             "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                            "model_type": "nomenclature_group_model",
                             "name": "Ингредиенты"
                         },
                         "range": {
                             "id": "028b9742-722c-44be-ac8d-841be73ae24e",
+                            "model_type": "range_model",
                             "name": "Миллилитр",
                             "coefficient": 1,
                             "base_range": null
@@ -283,18 +334,22 @@
                 },
                 {
                     "id": "49dac9f5-7d46-4a86-852c-b4412e220f60",
+                    "model_type": "recipe_ingredient_model",
                     "name": "Яйцо",
                     "nomenclature": {
                         "id": "eb32e7a8-c355-426d-a4e7-15f767d33a74",
+                        "model_type": "nomenclature_model",
                         "name": "Яйцо",
                         "full_name": "Яйцо куриное пищевое",
                         "type": "Сырьё",
                         "group": {
                             "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                            "model_type": "nomenclature_group_model",
                             "name": "Ингредиенты"
                         },
                         "range": {
                             "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+                            "model_type": "range_model",
                             "name": "Штука",
                             "coefficient": 1,
                             "base_range": null
@@ -307,18 +362,22 @@
                 },
                 {
                     "id": "907cdb83-a1cf-4241-bdb1-8d1c2cf8b0a2",
+                    "model_type": "recipe_ingredient_model",
                     "name": "Сахар",
                     "nomenclature": {
                         "id": "d41f8ade-8cf9-40b8-a74d-b7d83dceb701",
+                        "model_type": "nomenclature_model",
                         "name": "Сахар",
                         "full_name": "Сахар белый кристаллический",
                         "type": "Сырьё",
                         "group": {
                             "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                            "model_type": "nomenclature_group_model",
                             "name": "Ингредиенты"
                         },
                         "range": {
                             "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                            "model_type": "range_model",
                             "name": "Грамм",
                             "coefficient": 1,
                             "base_range": null
@@ -331,18 +390,22 @@
                 },
                 {
                     "id": "15083876-56d2-45fd-8ecc-5513cb456b29",
+                    "model_type": "recipe_ingredient_model",
                     "name": "Соль",
                     "nomenclature": {
                         "id": "3f7736dc-2dcf-4d80-9aa9-3fb67fa695f8",
+                        "model_type": "nomenclature_model",
                         "name": "Соль",
                         "full_name": "Соль поваренная пищевая",
                         "type": "Сырьё",
                         "group": {
                             "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                            "model_type": "nomenclature_group_model",
                             "name": "Ингредиенты"
                         },
                         "range": {
                             "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                            "model_type": "range_model",
                             "name": "Грамм",
                             "coefficient": 1,
                             "base_range": null
@@ -355,18 +418,22 @@
                 },
                 {
                     "id": "468fef76-3e6a-4318-9cdc-3094e4f9bd61",
+                    "model_type": "recipe_ingredient_model",
                     "name": "Масло растительное",
                     "nomenclature": {
                         "id": "04ea2c25-6291-446a-b4ae-0699bf43de86",
+                        "model_type": "nomenclature_model",
                         "name": "Масло растительное",
                         "full_name": "Масло подсолнечное рафинированное",
                         "type": "Сырьё",
                         "group": {
                             "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                            "model_type": "nomenclature_group_model",
                             "name": "Ингредиенты"
                         },
                         "range": {
                             "id": "028b9742-722c-44be-ac8d-841be73ae24e",
+                            "model_type": "range_model",
                             "name": "Миллилитр",
                             "coefficient": 1,
                             "base_range": null
@@ -392,18 +459,22 @@
         },
         {
             "id": "287120de-f1c3-4c56-82d0-c1bc876fb34e",
+            "model_type": "recipe_model",
             "name": "Классические блины",
             "result": {
                 "id": "59528a00-7fa7-41ca-b709-228ca33b3c9c",
+                "model_type": "nomenclature_model",
                 "name": "Блины",
                 "full_name": "Блины классические готовые",
                 "type": "Блюдо",
                 "group": {
                     "id": "7b2bef84-afed-436d-b372-227e7beb0c04",
+                    "model_type": "nomenclature_group_model",
                     "name": "Готовые блюда"
                 },
                 "range": {
                     "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+                    "model_type": "range_model",
                     "name": "Штука",
                     "coefficient": 1,
                     "base_range": null
@@ -412,18 +483,22 @@
             "ingredients": [
                 {
                     "id": "3ef19171-c58a-45ea-ac8a-b972c1b5a56d",
+                    "model_type": "recipe_ingredient_model",
                     "name": "Тесто для блинов",
                     "nomenclature": {
                         "id": "b5eb3871-946e-4cf7-b279-feaff24f7175",
+                        "model_type": "nomenclature_model",
                         "name": "Тесто для блинов",
                         "full_name": "Тесто для классических блинов",
                         "type": "Полуфабрикат",
                         "group": {
                             "id": "e3ef2500-14d6-480d-a37f-10810fece5da",
+                            "model_type": "nomenclature_group_model",
                             "name": "Полуфабрикаты"
                         },
                         "range": {
                             "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                            "model_type": "range_model",
                             "name": "Грамм",
                             "coefficient": 1,
                             "base_range": null
@@ -432,18 +507,22 @@
                     "quantity": 862,
                     "recipe": {
                         "id": "af6959bc-450b-43ac-a880-98add05d0c8f",
+                        "model_type": "recipe_model",
                         "name": "Тесто для блинов",
                         "result": {
                             "id": "b5eb3871-946e-4cf7-b279-feaff24f7175",
+                            "model_type": "nomenclature_model",
                             "name": "Тесто для блинов",
                             "full_name": "Тесто для классических блинов",
                             "type": "Полуфабрикат",
                             "group": {
                                 "id": "e3ef2500-14d6-480d-a37f-10810fece5da",
+                                "model_type": "nomenclature_group_model",
                                 "name": "Полуфабрикаты"
                             },
                             "range": {
                                 "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                                "model_type": "range_model",
                                 "name": "Грамм",
                                 "coefficient": 1,
                                 "base_range": null
@@ -452,22 +531,27 @@
                         "ingredients": [
                             {
                                 "id": "966a094c-ab04-4f8c-8ec8-1ee0bc088d26",
+                                "model_type": "recipe_ingredient_model",
                                 "name": "Мука",
                                 "nomenclature": {
                                     "id": "758084e2-a978-4181-8953-4bf68df5affe",
+                                    "model_type": "nomenclature_model",
                                     "name": "Мука",
                                     "full_name": "Мука пшеничная высшего сорта",
                                     "type": "Сырьё",
                                     "group": {
                                         "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                                        "model_type": "nomenclature_group_model",
                                         "name": "Ингредиенты"
                                     },
                                     "range": {
                                         "id": "5990f380-b6ef-4580-bcf9-26e0d5664883",
+                                        "model_type": "range_model",
                                         "name": "Килограмм",
                                         "coefficient": 1000,
                                         "base_range": {
                                             "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                                            "model_type": "range_model",
                                             "name": "Грамм",
                                             "coefficient": 1,
                                             "base_range": null
@@ -481,18 +565,22 @@
                             },
                             {
                                 "id": "cccfd4bc-e8db-4ca9-8462-457ac938868a",
+                                "model_type": "recipe_ingredient_model",
                                 "name": "Молоко",
                                 "nomenclature": {
                                     "id": "908b622c-63ae-4335-bb8a-9b8a26f83ae2",
+                                    "model_type": "nomenclature_model",
                                     "name": "Молоко",
                                     "full_name": "Молоко питьевое пастеризованное",
                                     "type": "Сырьё",
                                     "group": {
                                         "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                                        "model_type": "nomenclature_group_model",
                                         "name": "Ингредиенты"
                                     },
                                     "range": {
                                         "id": "028b9742-722c-44be-ac8d-841be73ae24e",
+                                        "model_type": "range_model",
                                         "name": "Миллилитр",
                                         "coefficient": 1,
                                         "base_range": null
@@ -505,18 +593,22 @@
                             },
                             {
                                 "id": "49dac9f5-7d46-4a86-852c-b4412e220f60",
+                                "model_type": "recipe_ingredient_model",
                                 "name": "Яйцо",
                                 "nomenclature": {
                                     "id": "eb32e7a8-c355-426d-a4e7-15f767d33a74",
+                                    "model_type": "nomenclature_model",
                                     "name": "Яйцо",
                                     "full_name": "Яйцо куриное пищевое",
                                     "type": "Сырьё",
                                     "group": {
                                         "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                                        "model_type": "nomenclature_group_model",
                                         "name": "Ингредиенты"
                                     },
                                     "range": {
                                         "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+                                        "model_type": "range_model",
                                         "name": "Штука",
                                         "coefficient": 1,
                                         "base_range": null
@@ -529,18 +621,22 @@
                             },
                             {
                                 "id": "907cdb83-a1cf-4241-bdb1-8d1c2cf8b0a2",
+                                "model_type": "recipe_ingredient_model",
                                 "name": "Сахар",
                                 "nomenclature": {
                                     "id": "d41f8ade-8cf9-40b8-a74d-b7d83dceb701",
+                                    "model_type": "nomenclature_model",
                                     "name": "Сахар",
                                     "full_name": "Сахар белый кристаллический",
                                     "type": "Сырьё",
                                     "group": {
                                         "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                                        "model_type": "nomenclature_group_model",
                                         "name": "Ингредиенты"
                                     },
                                     "range": {
                                         "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                                        "model_type": "range_model",
                                         "name": "Грамм",
                                         "coefficient": 1,
                                         "base_range": null
@@ -553,18 +649,22 @@
                             },
                             {
                                 "id": "15083876-56d2-45fd-8ecc-5513cb456b29",
+                                "model_type": "recipe_ingredient_model",
                                 "name": "Соль",
                                 "nomenclature": {
                                     "id": "3f7736dc-2dcf-4d80-9aa9-3fb67fa695f8",
+                                    "model_type": "nomenclature_model",
                                     "name": "Соль",
                                     "full_name": "Соль поваренная пищевая",
                                     "type": "Сырьё",
                                     "group": {
                                         "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                                        "model_type": "nomenclature_group_model",
                                         "name": "Ингредиенты"
                                     },
                                     "range": {
                                         "id": "24f787d0-8257-4fcb-96b9-034af30d7256",
+                                        "model_type": "range_model",
                                         "name": "Грамм",
                                         "coefficient": 1,
                                         "base_range": null
@@ -577,18 +677,22 @@
                             },
                             {
                                 "id": "468fef76-3e6a-4318-9cdc-3094e4f9bd61",
+                                "model_type": "recipe_ingredient_model",
                                 "name": "Масло растительное",
                                 "nomenclature": {
                                     "id": "04ea2c25-6291-446a-b4ae-0699bf43de86",
+                                    "model_type": "nomenclature_model",
                                     "name": "Масло растительное",
                                     "full_name": "Масло подсолнечное рафинированное",
                                     "type": "Сырьё",
                                     "group": {
                                         "id": "ce1dd170-cdeb-48b0-95f8-d3868ed24015",
+                                        "model_type": "nomenclature_group_model",
                                         "name": "Ингредиенты"
                                     },
                                     "range": {
                                         "id": "028b9742-722c-44be-ac8d-841be73ae24e",
+                                        "model_type": "range_model",
                                         "name": "Миллилитр",
                                         "coefficient": 1,
                                         "base_range": null
@@ -617,18 +721,22 @@
                 },
                 {
                     "id": "e16aa595-6b02-4d6c-8bdf-fa3d2b962f17",
+                    "model_type": "recipe_ingredient_model",
                     "name": "Упаковка для блинов",
                     "nomenclature": {
                         "id": "2a56eed0-01e3-417a-9cd5-170ec8821b8d",
+                        "model_type": "nomenclature_model",
                         "name": "Упаковка для блинов",
                         "full_name": "Контейнер для готовых блинов",
                         "type": "Упаковка",
                         "group": {
                             "id": "613b5f8b-2a61-472f-909f-28a5fa95614c",
+                            "model_type": "nomenclature_group_model",
                             "name": "Упаковка"
                         },
                         "range": {
                             "id": "9f651c1a-9cc8-4f9b-a85a-71e398613a12",
+                            "model_type": "range_model",
                             "name": "Штука",
                             "coefficient": 1,
                             "base_range": null

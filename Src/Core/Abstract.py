@@ -20,6 +20,11 @@ class base_entity(ABC):
         return self.__id
 
     @property
+    def model_type(self) -> str:
+        """Возвращает имя класса модели."""
+        return type(self).__name__
+
+    @property
     def name(self) -> str:
         """Возвращает наименование сущности."""
         return self.__name
