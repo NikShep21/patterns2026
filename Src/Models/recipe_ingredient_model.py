@@ -57,6 +57,24 @@ class recipe_ingredient_model(base_entity):
         self.gross_weight = gross_weight
         self.net_weight = net_weight
 
+    @classmethod
+    def from_dict(cls, data: dict) -> "recipe_ingredient_model":
+        """Восстанавливает ингредиент с уже загруженной технологической картой."""
+        recipe = data.get("recipe")
+        if recipe is None:
+            ingredient = cls(
+                nomenclature=data.get("nomenclature"),
+                quantity=data.get("quantity"),
+                gross_weight=data.get("gross_weight"),
+                net_weight=data.get("net_weight"),
+            )
+        else:
+            ingredient = cls(nomenclature=data.get("nomenclature"), recipe=recipe)
+
+        ingredient.name = data.get("name")
+        ingredient._restore_id(data.get("id"))
+        return ingredient
+
     @property
     def nomenclature(self) -> nomenclature_model:
         """Возвращает номенклатуру ингредиента."""
