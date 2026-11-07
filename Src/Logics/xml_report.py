@@ -2,6 +2,7 @@ from xml.etree.ElementTree import Element, SubElement, indent, tostring
 
 from Src.Core.Abstract import base_entity
 from Src.Core.abstract_report import abstract_report
+from Src.Dtos.report_data_dto import report_node_dto
 from Src.Dtos.report_result_dto import report_result_dto
 from Src.Logics.report_data_builder_factory import report_data_builder_factory
 
@@ -13,9 +14,8 @@ class xml_report(abstract_report):
         """Формирует XML-отчёт по сущности."""
         builder = report_data_builder_factory.create(source)
         data = builder.build(source)
-        root_name, root_value = next(iter(data.items()))
-        root = Element(root_name)
-        self.__fill_element(root, root_value)
+        root = Element(data.root_name)
+        self.__fill_element(root, data)
         indent(root)
         content = tostring(
             root,
@@ -29,11 +29,11 @@ class xml_report(abstract_report):
             "xml",
         )
 
-    def __fill_element(self, element: Element, value) -> None:
+    def __fill_element(self, element: Element, value: object) -> None:
         """Рекурсивно добавляет данные в XML-элемент."""
-        if isinstance(value, dict):
-            for key, item in value.items():
-                child = SubElement(element, key)
+        if isinstance(value, report_node_dto):
+            for name, item in value.iter_fields():
+                child = SubElement(element, name)
                 self.__fill_element(child, item)
             return
 

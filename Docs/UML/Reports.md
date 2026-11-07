@@ -58,20 +58,20 @@ classDiagram
 
     class report_data_builder {
         <<abstract>>
-        +build(source: base_entity) dict
-        #_build_reference(source: base_entity_or_None) dict_or_None
+        +build(source: base_entity) report_data_dto
+        #_build_reference(source: base_entity_or_None) report_reference_dto_or_None
     }
 
     class nomenclature_report_data_builder {
-        +build(source: nomenclature_model) dict
+        +build(source: nomenclature_model) nomenclature_report_data_dto
     }
 
     class range_report_data_builder {
-        +build(source: range_model) dict
+        +build(source: range_model) range_report_data_dto
     }
 
     class recipe_report_data_builder {
-        +build(source: recipe_model) dict
+        +build(source: recipe_model) recipe_report_data_dto
     }
 
     class report_data_builder_factory {
@@ -80,8 +80,22 @@ classDiagram
     }
 
     class report_data_flattener {
-        +flatten(data: dict) list
+        +flatten(data: report_data_dto) list
     }
+
+    class report_node_dto {
+        +iter_fields() Iterator
+    }
+
+    class report_data_dto {
+        +root_name str
+    }
+
+    class report_reference_dto
+    class nomenclature_report_data_dto
+    class range_report_data_dto
+    class recipe_report_data_dto
+    class recipe_ingredient_report_data_dto
 
     class report_format {
         <<enumeration>>
@@ -135,6 +149,15 @@ classDiagram
     report_data_builder <|-- range_report_data_builder
     report_data_builder <|-- recipe_report_data_builder
     report_data_builder_factory ..> report_data_builder : создаёт
+    report_data_builder ..> report_data_dto : возвращает
+    report_data_builder ..> report_reference_dto : формирует ссылки
+    report_node_dto <|-- report_data_dto
+    report_node_dto <|-- report_reference_dto
+    report_node_dto <|-- recipe_ingredient_report_data_dto
+    report_data_dto <|-- nomenclature_report_data_dto
+    report_data_dto <|-- range_report_data_dto
+    report_data_dto <|-- recipe_report_data_dto
+    recipe_report_data_dto *-- recipe_ingredient_report_data_dto
 
     base_entity <|-- nomenclature_model
     base_entity <|-- range_model
@@ -179,7 +202,7 @@ sequenceDiagram
         Report->>BuilderFactory: create(entity)
         BuilderFactory-->>Report: builder
         Report->>Builder: build(entity)
-        Builder-->>Report: данные сущности
+        Builder-->>Report: report_data_dto
         opt Плоский формат отчёта
             Report->>Flattener: flatten(data)
             Flattener-->>Report: список полей и значений
