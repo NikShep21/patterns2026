@@ -32,6 +32,20 @@ class recipe_model(base_entity):
         self.cooking_time = cooking_time
         self.steps = steps
 
+    @classmethod
+    def from_dict(cls, data: dict) -> "recipe_model":
+        """Восстанавливает технологическую карту с готовыми ингредиентами."""
+        recipe = cls(
+            name=data.get("name"),
+            result=data.get("result"),
+            ingredients=data.get("ingredients"),
+            output_quantity=data.get("output_quantity"),
+            cooking_time=data.get("cooking_time"),
+            steps=data.get("steps"),
+        )
+        recipe._restore_id(data.get("id"))
+        return recipe
+
     @property
     def result(self) -> nomenclature_model:
         """Возвращает номенклатуру готового блюда."""

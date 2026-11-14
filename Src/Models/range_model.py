@@ -18,6 +18,17 @@ class range_model(base_entity):
         self.base_range = base_range
 
     @classmethod
+    def from_dict(cls, data: dict) -> "range_model":
+        """Восстанавливает единицу с уже загруженной базовой единицей."""
+        unit = cls(
+            name=data.get("name"),
+            coefficient=data.get("coefficient"),
+            base_range=data.get("base_range"),
+        )
+        unit._restore_id(data.get("id"))
+        return unit
+
+    @classmethod
     def create_gram(cls) -> "range_model":
         """Создаёт базовую единицу измерения «Грамм»."""
         return cls("Грамм", 1)

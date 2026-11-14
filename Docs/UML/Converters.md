@@ -97,3 +97,99 @@ sequenceDiagram
 
     Factory-->>Client: словарь исходной структуры
 ```
+
+## Десериализация
+
+### Диаграмма классов
+
+```mermaid
+classDiagram
+    class deserialize_factory {
+        -dict __models
+        +load(file_name) dict
+        +deserialize(source: dict) base_entity
+        -__deserialize_model(source, loaded) base_entity
+        -__deserialize_value(value, loaded) object
+    }
+
+    class base_entity {
+        +id str
+        +model_type str
+        #_restore_id(value: str)
+    }
+
+    class range_model {
+        +from_dict(data: dict) range_model
+    }
+
+    class nomenclature_group_model {
+        +from_dict(data: dict) nomenclature_group_model
+    }
+
+    class nomenclature_model {
+        +from_dict(data: dict) nomenclature_model
+    }
+
+    class warehouse_model {
+        +from_dict(data: dict) warehouse_model
+    }
+
+    class recipe_ingredient_model {
+        +from_dict(data: dict) recipe_ingredient_model
+    }
+
+    class recipe_model {
+        +from_dict(data: dict) recipe_model
+    }
+
+    base_entity <|-- range_model
+    base_entity <|-- nomenclature_group_model
+    base_entity <|-- nomenclature_model
+    base_entity <|-- warehouse_model
+    base_entity <|-- recipe_ingredient_model
+    base_entity <|-- recipe_model
+    deserialize_factory ..> range_model : from_dict
+    deserialize_factory ..> nomenclature_group_model : from_dict
+    deserialize_factory ..> nomenclature_model : from_dict
+    deserialize_factory ..> warehouse_model : from_dict
+    deserialize_factory ..> recipe_ingredient_model : from_dict
+    deserialize_factory ..> recipe_model : from_dict
+```
+
+### Загрузка выгрузки хранилища
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Client as Клиент
+    participant Factory as deserialize_factory
+    participant Json as json
+    participant Model as Класс по model_type
+
+    Client->>Factory: load(file_name)
+    Factory->>Json: load(file)
+    Json-->>Factory: словарь выгрузки
+    Factory->>Factory: создать общий loaded для этой загрузки
+
+    loop Для каждого поля выгрузки
+        Factory->>Factory: __deserialize_value(value, loaded)
+        Note over Factory: Элементы списков обрабатываются по одному
+        opt Значение является словарём модели
+            Factory->>Factory: __deserialize_model(source, loaded)
+            Factory->>Factory: найти класс по model_type и проверить ID
+            alt ID загружен и данные совпадают
+                Factory->>Factory: взять готовый объект из loaded
+            else ID ещё не встречался
+                Factory->>Factory: отметить ID как незавершённый
+                Factory->>Factory: рекурсивно восстановить вложенные поля
+                Factory->>Model: from_dict(fields)
+                Model-->>Factory: объект с исходным ID
+                Factory->>Factory: сохранить объект в loaded
+            else ID собирается или данные различаются
+                Factory-->>Client: validation_error
+            end
+        end
+    end
+
+    Factory-->>Client: словарь с восстановленными моделями
+```

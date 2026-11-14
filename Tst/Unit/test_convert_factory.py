@@ -110,6 +110,9 @@ def test_success_convert_factory_converts_nested_model():
     assert result["name"] == "Мука"
     assert result["full_name"] == "Мука пшеничная"
     assert result["type"] == "Сырьё"
+    assert result["model_type"] == "nomenclature_model"
+    assert result["group"]["model_type"] == "nomenclature_group_model"
+    assert result["range"]["model_type"] == "range_model"
     assert result["group"]["name"] == "Ингредиенты"
     assert result["range"]["name"] == "Грамм"
 
@@ -138,10 +141,12 @@ def test_success_convert_factory_converts_unit_without_cycle():
     # Проверка
     assert result == {
         "id": kilogram.id,
+        "model_type": "range_model",
         "name": "Килограмм",
         "coefficient": 1000,
         "base_range": {
             "id": gram.id,
+            "model_type": "range_model",
             "name": "Грамм",
             "coefficient": 1,
             "base_range": None,

@@ -1,4 +1,5 @@
 from Src.Core.Abstract import base_entity
+from Src.Core.Exceptions import validation_error
 from Src.Core.Validator import validator
 from Src.Models.nomenclature_group_model import nomenclature_group_model
 from Src.Models.nomenclature_type import nomenclature_type
@@ -25,6 +26,24 @@ class nomenclature_model(base_entity):
         self.type = type
         self.group = group
         self.range = range
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "nomenclature_model":
+        """Восстанавливает номенклатуру с уже загруженными связями."""
+        try:
+            item_type = nomenclature_type(data.get("type"))
+        except ValueError as error:
+            raise validation_error("Некорректный тип номенклатуры") from error
+
+        item = cls(
+            name=data.get("name"),
+            full_name=data.get("full_name"),
+            type=item_type,
+            group=data.get("group"),
+            range=data.get("range"),
+        )
+        item._restore_id(data.get("id"))
+        return item
 
     @property
     def full_name(self) -> str:

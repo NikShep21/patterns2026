@@ -19,6 +19,16 @@ class base_entity(ABC):
         """Возвращает уникальный идентификатор сущности."""
         return self.__id
 
+    def _restore_id(self, value: str) -> None:
+        """Восстанавливает идентификатор сущности из сохранённых данных."""
+        validator.validate_required_string(value, "Идентификатор")
+        self.__id = value
+
+    @property
+    def model_type(self) -> str:
+        """Возвращает имя класса модели."""
+        return type(self).__name__
+
     @property
     def name(self) -> str:
         """Возвращает наименование сущности."""
