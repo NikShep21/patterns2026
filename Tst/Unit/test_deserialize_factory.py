@@ -65,8 +65,8 @@ def test_success_deserialize_factory_restores_models_from_export(
 
 @pytest.mark.parametrize(
     "source",
-    ({}, {"model_type": "unknown"}),
-    ids=("missing-model-type", "unknown-model-type"),
+    ({}, {"model_type": "unknown"}, {"model_type": "report_format"}),
+    ids=("missing-model-type", "unknown-model-type", "enum-is-not-a-model"),
 )
 def test_fail_deserialize_factory_rejects_invalid_model_type(source):
     """Проверяет ошибку при отсутствующей или неизвестной метке типа."""

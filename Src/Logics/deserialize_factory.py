@@ -1,34 +1,40 @@
 import json
+from functools import cache
+from importlib import import_module
+from inspect import getmembers, isabstract, isclass
 from pathlib import Path
+from pkgutil import iter_modules
+from uuid import uuid4
 
+from Src import Models
 from Src.Core.Abstract import base_entity
 from Src.Core.Exceptions import operation_error, validation_error
 from Src.Core.Validator import validator
-from Src.Models.nomenclature_group_model import nomenclature_group_model
-from Src.Models.nomenclature_model import nomenclature_model
-from Src.Models.range_model import range_model
-from Src.Models.recipe_ingredient_model import recipe_ingredient_model
-from Src.Models.recipe_model import recipe_model
-from Src.Models.warehouse_model import warehouse_model
+from Src.Logics.convert_factory import convert_factory
 
 
 _loaded_models = dict[str, tuple[dict, base_entity | None]]
 
 
+@cache
+def _discover_models() -> dict[str, type[base_entity]]:
+    """Находит конкретные модели с методом from_dict в пакете Src.Models."""
+    models = {}
+    for module_info in iter_modules(Models.__path__, prefix=f"{Models.__name__}."):
+        module = import_module(module_info.name)
+        for _, model in getmembers(module, isclass):
+            if (
+                model.__module__ == module.__name__
+                and issubclass(model, base_entity)
+                and not isabstract(model)
+                and callable(getattr(model, "from_dict", None))
+            ):
+                models[model.__name__] = model
+    return models
+
+
 class deserialize_factory:
     """Восстанавливает модели из словарей с меткой типа."""
-
-    __models = {
-        model.__name__: model
-        for model in (
-            range_model,
-            nomenclature_group_model,
-            nomenclature_model,
-            warehouse_model,
-            recipe_ingredient_model,
-            recipe_model,
-        )
-    }
 
     def deserialize(self, source: dict) -> base_entity:
         """Восстанавливает одну модель и её вложенные объекты."""
@@ -54,7 +60,7 @@ class deserialize_factory:
         model_type = source.get("model_type")
         validator.validate_required_string(model_type, "model_type")
 
-        model = self.__models.get(model_type)
+        model = _discover_models().get(model_type)
         if model is None:
             raise validation_error(f"Неизвестный тип модели «{model_type}»")
 
