@@ -5,6 +5,8 @@ from Src.Core.Validator import validator
 class organization_model(base_entity):
     """Модель организации."""
 
+    settings_fields = ("name", "inn", "bik", "account", "corr_account", "ownership_form")
+
     def __init__(
         self,
         name: str | None = None,
@@ -34,6 +36,16 @@ class organization_model(base_entity):
             self.corr_account = corr_account
         if ownership_form is not None:
             self.ownership_form = ownership_form
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "organization_model":
+        """Восстанавливает карточку организации из переданных полей."""
+        organization = cls()
+        for field in cls.settings_fields:
+            if field in data:
+                setattr(organization, field, data[field])
+        organization._restore_id(data["id"])
+        return organization
 
     @property
     def inn(self) -> str:

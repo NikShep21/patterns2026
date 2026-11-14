@@ -182,8 +182,13 @@ sequenceDiagram
     participant Flattener as report_data_flattener
     participant Result as report_result_dto
 
-    Client->>API: GET /api/reports/{format}/{type}/{code}
-    API->>Storage: find(type, code)
+    alt Формат указан в адресе
+        Client->>API: GET /api/reports/{response_format}/{value_type}/{code}
+    else Используется формат из настроек
+        Client->>API: GET /api/reports/{value_type}/{code}
+    end
+    API->>API: преобразовать entity_type в storage_entity_type
+    API->>Storage: find(storage_entity_type, code)
 
     alt Сущность не найдена
         Storage-->>API: None

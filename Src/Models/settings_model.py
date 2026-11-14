@@ -7,6 +7,8 @@ from Src.Models.report_format import report_format
 class settings_model(base_entity):
     """Модель настроек приложения."""
 
+    settings_fields = ("boss_name", "accountant_name", "is_first_start", "response_format")
+
     def __init__(self):
         """Инициализирует настройки значениями первого запуска."""
         super().__init__()
@@ -15,6 +17,20 @@ class settings_model(base_entity):
         self.__accountant_name = ""
         self.__is_first_start = True
         self.__response_format = report_format.TXT
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "settings_model":
+        """Восстанавливает настройки и загруженную карточку организации."""
+        settings = cls()
+        settings.organization = data["organization"]
+        for field in cls.settings_fields:
+            if field in data:
+                value = data[field]
+                if field == "response_format":
+                    value = report_format.from_string(value)
+                setattr(settings, field, value)
+        settings._restore_id(data["id"])
+        return settings
 
     @property
     def organization(self) -> organization_model:

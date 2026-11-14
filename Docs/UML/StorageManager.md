@@ -34,7 +34,11 @@ classDiagram
         +add_warehouse(value: warehouse_model) None
         +add_recipe(value: recipe_model) None
         +clear() None
-        +find(value_type: entity_type, code: str) base_entity
+        +find(value_type: storage_entity_type, code: str) base_entity_or_None
+        +entities(value_type: storage_entity_type) tuple
+        +create_entity(value_type, data: dict) base_entity
+        +update_entity(value_type, code: str, data: dict) base_entity
+        +delete_entity(value_type, code: str) None
         +ranges tuple
         +groups tuple
         +nomenclature tuple
@@ -115,12 +119,16 @@ classDiagram
     class operation_error
     class validation_error
 
-    class entity_type {
+    class storage_entity_type {
         <<enumeration>>
         NOMENCLATURE
         RANGE
         RECIPE
+        GROUP
+        WAREHOUSE
     }
+
+    class deserialize_factory
 
     abstract_manager <|-- storage_manager
     storage_manager ..> settings_manager : использует настройки
@@ -130,7 +138,8 @@ classDiagram
     storage_manager o-- "0..*" nomenclature_model : nomenclature
     storage_manager o-- "0..*" warehouse_model : warehouses
     storage_manager o-- "0..*" recipe_model : recipes
-    storage_manager ..> entity_type : выбирает коллекцию
+    storage_manager ..> storage_entity_type : выбирает коллекцию
+    storage_manager ..> deserialize_factory : создаёт модель для CRUD
     nomenclature_model --> nomenclature_group_model : group
     nomenclature_model --> range_model : range
     nomenclature_model --> nomenclature_type : type

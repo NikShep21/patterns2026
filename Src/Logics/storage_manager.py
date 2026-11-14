@@ -1,14 +1,22 @@
-from Src.Core.Exceptions import operation_error, validation_error
+from Src.Core.Abstract import base_entity
+from Src.Core.Exceptions import (
+    entity_conflict_error,
+    entity_not_found_error,
+    operation_error,
+    validation_error,
+)
 from Src.Core.Validator import validator
 from Src.Core.abstract_manager import abstract_manager
+from Src.Logics.convert_factory import convert_factory
+from Src.Logics.deserialize_factory import deserialize_factory
 from Src.Logics.settings_manager import settings_manager
-from Src.Models.entity_type import entity_type
 from Src.Models.nomenclature_group_model import nomenclature_group_model
 from Src.Models.nomenclature_model import nomenclature_model
 from Src.Models.nomenclature_type import nomenclature_type
 from Src.Models.range_model import range_model
 from Src.Models.recipe_ingredient_model import recipe_ingredient_model
 from Src.Models.recipe_model import recipe_model
+from Src.Models.storage_entity_type import storage_entity_type
 from Src.Models.warehouse_model import warehouse_model
 
 
@@ -110,24 +118,136 @@ class storage_manager(abstract_manager):
         self.__recipes.clear()
         self._is_loaded = False
 
-    def find(self, value_type: entity_type, code: str):
+    def find(self, value_type: storage_entity_type, code: str) -> base_entity | None:
         """Возвращает сущность указанного типа по уникальному коду."""
-        validator.validate_type(value_type, entity_type, "Тип сущности")
+        collection, _ = self.__collection(value_type)
         validator.validate_required_string(code, "Код сущности")
-        collections = {
-            entity_type.NOMENCLATURE: self.__nomenclature,
-            entity_type.RANGE: self.__ranges,
-            entity_type.RECIPE: self.__recipes,
-        }
+        return next((entity for entity in collection if entity.id == code), None)
 
-        return next(
-            (
-                item
-                for item in collections[value_type]
-                if item.id == code.strip()
-            ),
-            None,
+    def entities(self, value_type: storage_entity_type) -> tuple[base_entity, ...]:
+        """Возвращает записи выбранной коллекции."""
+        collection, _ = self.__collection(value_type)
+        return tuple(collection)
+
+    def create_entity(self, value_type: storage_entity_type, data: dict) -> base_entity:
+        """Проверяет и добавляет новую запись."""
+        collection, model = self.__collection(value_type)
+        entity = self.__build_entity(model, data)
+        self.__validate_name(collection, entity)
+        collection.append(entity)
+        return entity
+
+    def update_entity(
+        self, value_type: storage_entity_type, code: str, data: dict,
+    ) -> base_entity:
+        """Проверяет изменения и обновляет существующий объект на месте."""
+        collection, model = self.__collection(value_type)
+        current = self.__require_entity(value_type, code)
+        fields = {**convert_factory().convert(current), **data}
+        if fields["id"] != current.id:
+            self.__ensure_unreferenced(current)
+
+        replacement = self.__build_entity(model, fields, current)
+        self.__validate_name(collection, replacement, current)
+        self.__validate_references_after_update(current, replacement)
+        current.replace_state(replacement)
+        return current
+
+    def delete_entity(self, value_type: storage_entity_type, code: str) -> None:
+        """Удаляет запись без входящих ссылок."""
+        collection, _ = self.__collection(value_type)
+        entity = self.__require_entity(value_type, code)
+        self.__ensure_unreferenced(entity)
+        collection.remove(entity)
+
+    def __require_entity(self, value_type: storage_entity_type, code: str) -> base_entity:
+        """Сообщает об отсутствии записи при изменении или удалении."""
+        entity = self.find(value_type, code)
+        if entity is None:
+            raise entity_not_found_error(f"Сущность с кодом «{code}» не найдена")
+        return entity
+
+    def __collection(self, value_type: storage_entity_type) -> tuple[list, type]:
+        """Сопоставляет тип записи с коллекцией и классом модели."""
+        validator.validate_type(value_type, storage_entity_type, "Тип сущности")
+        return {
+            storage_entity_type.RANGE: (self.__ranges, range_model),
+            storage_entity_type.GROUP: (self.__groups, nomenclature_group_model),
+            storage_entity_type.NOMENCLATURE: (self.__nomenclature, nomenclature_model),
+            storage_entity_type.WAREHOUSE: (self.__warehouses, warehouse_model),
+            storage_entity_type.RECIPE: (self.__recipes, recipe_model),
+        }[value_type]
+
+    def __all_entities(self) -> tuple[base_entity, ...]:
+        """Возвращает записи всех коллекций."""
+        return tuple(
+            entity
+            for value_type in storage_entity_type
+            for entity in self.entities(value_type)
         )
+
+    def __ensure_unreferenced(self, target: base_entity) -> None:
+        """Запрещает удаление или смену кода при наличии входящих ссылок."""
+        for entity in self.__all_entities():
+            if entity is not target and any(ref is target for ref in entity.references()):
+                raise entity_conflict_error(
+                    f"На сущность «{target.name}» ссылается «{entity.name}»"
+                )
+
+    def __build_entity(
+        self, model: type, data: dict, current: base_entity | None = None,
+    ) -> base_entity:
+        """Собирает кандидата для записи и проверяет его связи с хранилищем."""
+        known = {entity.id: entity for entity in self.__all_entities() if entity is not current}
+        model_type = model.__name__
+        if data.get("model_type", model_type) != model_type:
+            raise validation_error(f"Для этой коллекции ожидается «{model_type}»")
+        if "id" in data:
+            validator.validate_required_string(data["id"], "Код сущности")
+            if data["id"] in known:
+                raise entity_conflict_error(f"Код «{data['id']}» уже используется")
+
+        candidate = deserialize_factory().deserialize(
+            {**data, "model_type": model_type}, known=known,
+        )
+        pending = list(candidate.references())
+        seen = set()
+        while pending:
+            reference = pending.pop()
+            if reference is current:
+                raise entity_conflict_error("Изменение создаёт циклическую ссылку")
+            if known.get(reference.id) is not reference:
+                raise validation_error(
+                    f"Связанная сущность «{reference.name}» отсутствует в хранилище"
+                )
+            if reference.id not in seen:
+                seen.add(reference.id)
+                pending.extend(reference.references())
+        return candidate
+
+    def __validate_references_after_update(
+        self, current: base_entity, replacement: base_entity,
+    ) -> None:
+        """Проверяет, сохраняются ли правила технологических карт после изменения."""
+        for recipe in self.__recipes:
+            if recipe.result is current:
+                recipe.validate_replacement(replacement)
+            for ingredient in recipe.ingredients:
+                if ingredient.recipe is current and replacement.result is not ingredient.nomenclature:
+                    raise entity_conflict_error(
+                        "Результат вложенной карты должен совпадать с номенклатурой ингредиента"
+                    )
+
+    @staticmethod
+    def __validate_name(
+        collection: list, candidate: base_entity, current: base_entity | None = None,
+    ) -> None:
+        """Проверяет уникальность наименования в коллекции."""
+        if any(
+            entity is not current and entity.name.casefold() == candidate.name.casefold()
+            for entity in collection
+        ):
+            raise entity_conflict_error(f"Наименование «{candidate.name}» уже используется")
 
     @property
     def ranges(self) -> tuple[range_model, ...]:

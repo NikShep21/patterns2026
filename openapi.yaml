@@ -1,0 +1,379 @@
+openapi: 3.1.0
+info:
+  title: Ромашка
+  description: Отчёты и управление доменными сущностями
+  version: 0.1.0
+paths:
+  /api/report-formats:
+    get:
+      tags:
+      - Отчёты
+      summary: Получить список форматов отчётов
+      description: Возвращает доступные форматы отчётов.
+      operationId: get_report_formats_api_report_formats_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/report_format'
+                type: array
+                title: Response Get Report Formats Api Report Formats Get
+  /api/reports/{response_format}/{value_type}/{code}:
+    get:
+      tags:
+      - Отчёты
+      summary: Сформировать отчёт указанного формата
+      description: Формирует отчёт выбранного формата по типу и коду сущности.
+      operationId: get_report_api_reports__response_format___value_type___code__get
+      parameters:
+      - name: response_format
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/report_format'
+      - name: value_type
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/entity_type'
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Code
+      responses:
+        '200':
+          description: Отчёт в выбранном формате
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+            text/markdown:
+              schema:
+                type: string
+                format: binary
+            application/xml:
+              schema:
+                type: string
+            text/plain:
+              schema:
+                type: string
+            text/html:
+              schema:
+                type: string
+        '400':
+          description: Ошибка формирования отчёта
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/reports/{value_type}/{code}:
+    get:
+      tags:
+      - Отчёты
+      summary: Сформировать отчёт в формате из настроек
+      description: Формирует отчёт с использованием create_default().
+      operationId: get_default_report_api_reports__value_type___code__get
+      parameters:
+      - name: value_type
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/entity_type'
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Code
+      responses:
+        '200':
+          description: Отчёт в выбранном формате
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+            text/markdown:
+              schema:
+                type: string
+                format: binary
+            application/xml:
+              schema:
+                type: string
+            text/plain:
+              schema:
+                type: string
+            text/html:
+              schema:
+                type: string
+        '400':
+          description: Ошибка формирования отчёта
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/entities/{value_type}:
+    get:
+      tags:
+      - Сущности
+      summary: List Entities
+      description: Возвращает все записи выбранной коллекции.
+      operationId: list_entities_api_entities__value_type__get
+      parameters:
+      - name: value_type
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/storage_entity_type'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response List Entities Api Entities  Value Type  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - Сущности
+      summary: Create Entity
+      description: Проверяет данные и создаёт запись.
+      operationId: create_entity_api_entities__value_type__post
+      parameters:
+      - name: value_type
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/storage_entity_type'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: Поля модели.
+              examples:
+              - name: Новый склад
+                address: ул. Ленина, 10
+              title: Data
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Create Entity Api Entities  Value Type  Post
+        '400':
+          description: Некорректные данные или ссылка
+        '409':
+          description: Конфликт кода, имени или связи
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/entities/{value_type}/{code}:
+    get:
+      tags:
+      - Сущности
+      summary: Get Entity
+      description: Возвращает запись по коду.
+      operationId: get_entity_api_entities__value_type___code__get
+      parameters:
+      - name: value_type
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/storage_entity_type'
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Code
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Entity Api Entities  Value Type   Code  Get
+        '404':
+          description: Сущность не найдена
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - Сущности
+      summary: Update Entity
+      description: Обновляет переданные поля записи.
+      operationId: update_entity_api_entities__value_type___code__patch
+      parameters:
+      - name: value_type
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/storage_entity_type'
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: Поля модели.
+              examples:
+              - name: Новый склад
+                address: ул. Ленина, 10
+              title: Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update Entity Api Entities  Value Type   Code  Patch
+        '400':
+          description: Некорректные данные или ссылка
+        '404':
+          description: Сущность не найдена
+        '409':
+          description: Конфликт кода, имени или связи
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Сущности
+      summary: Delete Entity
+      description: Удаляет запись, если на неё не ссылаются другие сущности.
+      operationId: delete_entity_api_entities__value_type___code__delete
+      parameters:
+      - name: value_type
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/storage_entity_type'
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Code
+      responses:
+        '204':
+          description: Successful Response
+        '404':
+          description: Сущность не найдена
+        '409':
+          description: Конфликт кода, имени или связи
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    entity_type:
+      type: string
+      enum:
+      - nomenclature
+      - range
+      - recipe
+      title: entity_type
+      description: Определяет доступные в отчётах типы сущностей.
+    report_format:
+      type: string
+      enum:
+      - CSV
+      - Markdown
+      - XML
+      - TXT
+      - HTML
+      title: report_format
+      description: Определяет доступные форматы формирования отчётов.
+    storage_entity_type:
+      type: string
+      enum:
+      - range
+      - group
+      - nomenclature
+      - warehouse
+      - recipe
+      title: storage_entity_type
+      description: Определяет коллекции, доступные для CRUD.
