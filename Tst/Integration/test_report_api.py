@@ -1,3 +1,5 @@
+from urllib.parse import quote
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -23,6 +25,19 @@ def api_data():
 
     storage.clear()
     settings.settings.is_first_start = True
+
+
+def test_success_get_report_formats_returns_all_supported_formats(api_data):
+    """Проверяет, что API возвращает весь список форматов отчётов."""
+    # Подготовка
+    client, _, _ = api_data
+
+    # Действие
+    response = client.get("/api/report-formats")
+
+    # Проверка
+    assert response.status_code == 200
+    assert response.json() == ["CSV", "Markdown", "XML", "TXT", "HTML"]
 
 
 @pytest.mark.parametrize(
@@ -112,6 +127,36 @@ def test_success_get_default_report_uses_settings_format(api_data):
     assert response.headers["content-type"].startswith("text/markdown")
     assert response.headers["content-disposition"].endswith('.md"')
     assert nomenclature.name in response.text
+
+
+def test_success_get_csv_report_supports_custom_entity_code(api_data):
+    """Проверяет скачивание отчёта для кода с кириллицей, пробелами и кавычками."""
+    # Подготовка
+    client, _, storage = api_data
+    code = ' код "мука" '
+    entity = storage.nomenclature[0]
+    group = entity.group.id
+    unit = entity.range.id
+    response = client.post(
+        "/api/entities/nomenclature",
+        json={
+            "id": code,
+            "name": "Позиция с заданным кодом",
+            "full_name": "Позиция с заданным кодом",
+            "type": entity.type.value,
+            "group": {"id": group},
+            "range": {"id": unit},
+        },
+    )
+    assert response.status_code == 201
+
+    # Действие
+    response = client.get(f"/api/reports/CSV/nomenclature/{quote(code, safe='')}")
+
+    # Проверка
+    assert response.status_code == 200
+    file_name = quote(f"nomenclature-{code}.csv", safe="")
+    assert response.headers["content-disposition"] == f"attachment; filename*=UTF-8''{file_name}"
 
 
 def test_fail_get_report_unknown_code_returns_not_found(api_data):
