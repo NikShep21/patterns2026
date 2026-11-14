@@ -50,6 +50,10 @@ class nomenclature_model(base_entity):
         """Возвращает полное наименование номенклатуры."""
         return self.__full_name
 
+    def references(self) -> tuple[base_entity, ...]:
+        """Возвращает группу и единицу измерения."""
+        return self.group, self.range
+
     @full_name.setter
     def full_name(self, value: str):
         """Изменяет полное наименование номенклатуры."""

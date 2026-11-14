@@ -46,6 +46,22 @@ class recipe_model(base_entity):
         recipe._restore_id(data.get("id"))
         return recipe
 
+    def references(self) -> tuple[base_entity, ...]:
+        """Возвращает результат и ссылки из состава карты."""
+        return (self.result,) + tuple(
+            reference
+            for ingredient in self.ingredients
+            for reference in ingredient.references()
+        )
+
+    def validate_replacement(self, result: nomenclature_model) -> None:
+        """Проверяет, что новый вид номенклатуры подходит результату карты."""
+        if result.type not in self._allowed_result_types:
+            raise validation_error(
+                "Результатом технологической карты может быть "
+                "только полуфабрикат или блюдо"
+            )
+
     @property
     def result(self) -> nomenclature_model:
         """Возвращает номенклатуру готового блюда."""
@@ -56,12 +72,7 @@ class recipe_model(base_entity):
         """Изменяет номенклатуру готового блюда."""
         validator.validate_type(value, nomenclature_model, "Результат")
 
-        if value.type not in self._allowed_result_types:
-            raise validation_error(
-                "Результатом технологической карты может быть "
-                "только полуфабрикат или блюдо"
-            )
-
+        self.validate_replacement(value)
         self.__result = value
 
     @property

@@ -3,11 +3,11 @@ import pytest
 from Src.Core.Exceptions import validation_error
 from Src.Logics.settings_manager import settings_manager
 from Src.Logics.storage_manager import storage_manager
-from Src.Models.entity_type import entity_type
 from Src.Models.nomenclature_group_model import nomenclature_group_model
 from Src.Models.nomenclature_model import nomenclature_model
 from Src.Models.nomenclature_type import nomenclature_type
 from Src.Models.range_model import range_model
+from Src.Models.storage_entity_type import storage_entity_type
 from Src.Models.warehouse_model import warehouse_model
 
 
@@ -171,9 +171,11 @@ def test_success_storage_loads_settings_when_needed(loaded_managers):
 @pytest.mark.parametrize(
     ("value_type", "collection_name"),
     (
-        (entity_type.NOMENCLATURE, "nomenclature"),
-        (entity_type.RANGE, "ranges"),
-        (entity_type.RECIPE, "recipes"),
+        (storage_entity_type.NOMENCLATURE, "nomenclature"),
+        (storage_entity_type.RANGE, "ranges"),
+        (storage_entity_type.RECIPE, "recipes"),
+        (storage_entity_type.GROUP, "groups"),
+        (storage_entity_type.WAREHOUSE, "warehouses"),
     ),
 )
 def test_success_storage_find_returns_entity_by_type_and_code(
@@ -203,7 +205,7 @@ def test_success_storage_find_unknown_code_returns_none(loaded_managers):
     storage.load()
 
     # Действие
-    result = storage.find(entity_type.RECIPE, "unknown-code")
+    result = storage.find(storage_entity_type.RECIPE, "unknown-code")
 
     # Проверка
     assert result is None
@@ -213,7 +215,7 @@ def test_success_storage_find_unknown_code_returns_none(loaded_managers):
     ("value_type", "code"),
     (
         ("recipe", "code"),
-        (entity_type.RECIPE, ""),
+        (storage_entity_type.RECIPE, ""),
     ),
 )
 def test_fail_storage_find_invalid_arguments_raises_validation_error(

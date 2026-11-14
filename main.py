@@ -11,6 +11,7 @@ from Src.Logics.settings_manager import settings_manager
 from Src.Logics.storage_manager import storage_manager
 from Src.Models.entity_type import entity_type
 from Src.Models.report_format import report_format
+from Src.Models.storage_entity_type import storage_entity_type
 
 
 @asynccontextmanager
@@ -44,7 +45,7 @@ async def handle_application_error(_, error: application_error):
 
 def find_entity(value_type: entity_type, code: str):
     """Возвращает сущность указанного типа или сообщает об отсутствии."""
-    entity = storage_manager().find(value_type, code)
+    entity = storage_manager().find(storage_entity_type(value_type.value), code.strip())
 
     if entity is None:
         raise HTTPException(
