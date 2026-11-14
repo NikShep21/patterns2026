@@ -42,6 +42,7 @@ classDiagram
         -str __accountant_name
         -bool __is_first_start
         -report_format __response_format
+        +from_dict(data: dict) settings_model
         +organization organization_model
         +boss_name str
         +accountant_name str
@@ -50,6 +51,7 @@ classDiagram
     }
 
     class organization_model {
+        +from_dict(data: dict) organization_model
         +inn str
         +bik str
         +account str
@@ -64,6 +66,10 @@ classDiagram
     }
 
     class operation_error
+
+    class deserialize_factory {
+        +deserialize(source: dict, generate_ids: bool) base_entity
+    }
 
     class report_format {
         <<enumeration>>
@@ -81,7 +87,9 @@ classDiagram
     settings_manager *-- settings_model : settings
     settings_model *-- organization_model : organization
     settings_model --> report_format : response format
-    settings_manager ..> organization_model : создаёт
+    settings_manager ..> deserialize_factory : восстанавливает настройки
+    deserialize_factory ..> organization_model : from_dict
+    deserialize_factory ..> settings_model : from_dict
     settings_manager ..> validator : проверяет данные
     settings_manager ..> operation_error : вызывает
 ```
@@ -94,6 +102,7 @@ sequenceDiagram
     actor Client as Клиент
     participant Manager as settings_manager
     participant File as settings.json
+    participant Factory as deserialize_factory
     participant Organization as organization_model
     participant Settings as settings_model
 
@@ -108,10 +117,12 @@ sequenceDiagram
     else JSON загружен
         File-->>Manager: словарь данных
         Manager->>Manager: convert()
-        Manager->>Organization: создать из данных организации
-        Organization-->>Manager: объект организации
-        Manager->>Settings: заполнить поля настроек
-        Settings-->>Manager: объект настроек
+        Manager->>Factory: deserialize(source, generate_ids=True)
+        Factory->>Organization: from_dict(fields)
+        Organization-->>Factory: объект организации
+        Factory->>Settings: from_dict(fields)
+        Settings-->>Factory: объект настроек
+        Factory-->>Manager: объект настроек
         Manager->>Manager: is_loaded = true
         Manager-->>Client: загрузка завершена
     end
