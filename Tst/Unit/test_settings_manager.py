@@ -126,7 +126,7 @@ def test_success_settings_manager_loads_without_optional_fields(monkeypatch):
     """Проверяет загрузку настроек при отсутствии необязательных полей."""
     # Подготовка
     manager = settings_manager()
-    data = {}
+    data = {"extra": {"unused": True}}
     monkeypatch.setattr(
         "builtins.open",
         lambda *args, **kwargs: StringIO(

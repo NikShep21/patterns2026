@@ -10,7 +10,6 @@ from Src import Models
 from Src.Core.Abstract import base_entity
 from Src.Core.Exceptions import operation_error, validation_error
 from Src.Core.Validator import validator
-from Src.Logics.convert_factory import convert_factory
 
 
 _loaded_models = dict[str, tuple[dict, base_entity | None]]
@@ -36,9 +35,15 @@ def _discover_models() -> dict[str, type[base_entity]]:
 class deserialize_factory:
     """Восстанавливает модели из словарей с меткой типа."""
 
-    def deserialize(self, source: dict) -> base_entity:
+    def deserialize(
+        self,
+        source: dict,
+        *,
+        generate_ids: bool = False,
+    ) -> base_entity:
         """Восстанавливает одну модель и её вложенные объекты."""
-        return self.__deserialize_model(source, {})
+        validator.validate_type(source, dict, "Данные модели")
+        return self.__deserialize_model(source, {}, generate_ids)
 
     def load(self, file_name: str | Path) -> dict[str, object]:
         """Читает выгрузку хранилища и восстанавливает все её коллекции."""
@@ -55,7 +60,13 @@ class deserialize_factory:
             for name, value in source.items()
         }
 
-    def __deserialize_model(self, source: dict, loaded: _loaded_models) -> base_entity:
+    def __deserialize_model(
+        self,
+        source: dict,
+        loaded: _loaded_models,
+        generate_ids: bool = False,
+    ) -> base_entity:
+        """Выбирает класс, восстанавливает поля и переиспользует общие объекты."""
         validator.validate_type(source, dict, "Данные модели")
         model_type = source.get("model_type")
         validator.validate_required_string(model_type, "model_type")
@@ -64,6 +75,8 @@ class deserialize_factory:
         if model is None:
             raise validation_error(f"Неизвестный тип модели «{model_type}»")
 
+        if generate_ids and "id" not in source:
+            source = {"id": str(uuid4()), **source}
         entity_id = source.get("id")
         validator.validate_required_string(entity_id, "Идентификатор")
         if entity_id in loaded:
@@ -76,7 +89,7 @@ class deserialize_factory:
 
         loaded[entity_id] = (source, None)
         fields = {
-            name: self.__deserialize_value(value, loaded)
+            name: self.__deserialize_value(value, loaded, generate_ids)
             for name, value in source.items()
             if name != "model_type"
         }
@@ -84,9 +97,18 @@ class deserialize_factory:
         loaded[entity_id] = (source, entity)
         return entity
 
-    def __deserialize_value(self, value: object, loaded: _loaded_models) -> object:
+    def __deserialize_value(
+        self,
+        value: object,
+        loaded: _loaded_models,
+        generate_ids: bool = False,
+    ) -> object:
+        """Восстанавливает вложенную модель или элементы списка."""
         if isinstance(value, dict):
-            return self.__deserialize_model(value, loaded)
+            return self.__deserialize_model(value, loaded, generate_ids)
         if isinstance(value, list):
-            return [self.__deserialize_value(item, loaded) for item in value]
+            return [
+                self.__deserialize_value(item, loaded, generate_ids)
+                for item in value
+            ]
         return value

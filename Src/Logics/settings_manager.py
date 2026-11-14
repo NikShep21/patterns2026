@@ -3,8 +3,8 @@ import json
 from Src.Core.Exceptions import operation_error
 from Src.Core.Validator import validator
 from Src.Core.abstract_manager import abstract_manager
+from Src.Logics.deserialize_factory import deserialize_factory
 from Src.Models.organization_model import organization_model
-from Src.Models.report_format import report_format
 from Src.Models.settings_model import settings_model
 
 
@@ -57,40 +57,22 @@ class settings_manager(abstract_manager):
             "Организация",
         )
 
-        organization = organization_model()
-        organization_fields = (
-            "name",
-            "inn",
-            "bik",
-            "account",
-            "corr_account",
-            "ownership_form",
-        )
-
-        for field in organization_fields:
-            if field in organization_data:
-                setattr(organization, field, organization_data[field])
-
-        settings = settings_model()
-        settings.organization = organization
-
-        settings_fields = (
-            "boss_name",
-            "accountant_name",
-            "is_first_start",
-        )
-
-        for field in settings_fields:
-            if field in self._data:
-                setattr(settings, field, self._data[field])
-
-        if "response_format" in self._data:
-            settings.response_format = report_format.from_string(
-                self._data["response_format"]
-            )
-
-        self.__settings = settings
-
+        source = {
+            field: self._data[field]
+            for field in settings_model.settings_fields
+            if field in self._data
+        }
+        organization_fields = {
+            field: organization_data[field]
+            for field in organization_model.settings_fields
+            if field in organization_data
+        }
+        source["model_type"] = settings_model.__name__
+        source["organization"] = {
+            **organization_fields,
+            "model_type": organization_model.__name__,
+        }
+        self.__settings = deserialize_factory().deserialize(source, generate_ids=True)
         return True
 
     @property
