@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import TYPE_CHECKING
 
 from Src.Core.Abstract import base_entity
 from Src.Logics.deserialize_factory import discover_models
@@ -19,12 +20,16 @@ def _collect_api_models() -> dict[str, type[base_entity]]:
 
 _api_models = _collect_api_models()
 
-storage_entity_type = Enum(
-    "storage_entity_type",
-    {name: name for name in sorted(_api_models)},
-    module=__name__,
-)
-storage_entity_type.__doc__ = "Определяет коллекции, доступные для CRUD."
+if TYPE_CHECKING:
+    class storage_entity_type(Enum):
+        """Тип коллекции, доступной для CRUD."""
+else:
+    storage_entity_type = Enum(
+        "storage_entity_type",
+        {name: name for name in sorted(_api_models)},
+        module=__name__,
+    )
+    storage_entity_type.__doc__ = "Определяет коллекции, доступные для CRUD."
 
 
 def api_entity_model(name: str) -> type[base_entity]:

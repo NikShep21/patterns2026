@@ -1,11 +1,11 @@
 """Описания запросов и ответов для OpenAPI."""
 
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import Body
 
 
-report_responses = {
+report_responses: dict[int | str, dict[str, Any]] = {
     200: {
         "description": "Отчёт в выбранном формате",
         "content": {
@@ -28,7 +28,7 @@ entity_body = Annotated[
     ),
 ]
 
-entity_errors = {
+entity_errors: dict[int | str, dict[str, Any]] = {
     400: {"description": "Некорректные данные или ссылка"},
     404: {"description": "Сущность не найдена"},
     409: {"description": "Конфликт кода, имени или связи"},
