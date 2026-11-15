@@ -110,6 +110,20 @@ def test_success_get_report_supports_required_entity_types(
     assert entity.name in response.text
 
 
+def test_success_get_report_tries_code_without_outer_spaces(api_data):
+    """Проверяет повторный поиск по коду без внешних пробелов."""
+    # Подготовка
+    client, _, storage = api_data
+    entity = storage.nomenclature[0]
+
+    # Действие
+    response = client.get(f"/api/reports/TXT/nomenclature/%20{entity.id}%20")
+
+    # Проверка
+    assert response.status_code == 200
+    assert entity.id in response.text
+
+
 def test_success_get_default_report_uses_settings_format(api_data):
     """Проверяет применение create_default() в API."""
     # Подготовка

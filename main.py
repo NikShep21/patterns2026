@@ -55,30 +55,25 @@ async def handle_application_error(_, error: application_error):
     return JSONResponse(status_code=status, content={"detail": str(error)})
 
 
-def find_entity(value_type: storage_entity_type, code: str):
-    """Возвращает сущность указанного типа или сообщает об отсутствии."""
-    entity = storage_manager().find(api_entity_model(value_type.value), code)
+def find_report_entity(value_type: entity_type, code: str):
+    """Ищет запись для отчёта по точному коду или коду без внешних пробелов."""
+    storage = storage_manager()
+    model = api_entity_model(value_type.value)
+    stripped_code = code.strip()
+    entity = storage.find(model, code)
+    if entity is None and stripped_code != code:
+        entity = storage.find(model, stripped_code)
 
     if entity is None:
         raise HTTPException(
             status_code=404,
             detail=(
                 f"Сущность типа «{value_type.value}» "
-                f"с кодом «{code}» не найдена"
+                f"с кодом «{stripped_code}» не найдена"
             ),
         )
 
     return entity
-
-
-def find_report_entity(value_type: entity_type, code: str):
-    """Ищет запись по коду из отчёта с учётом прежней обработки пробелов."""
-    storage_type = storage_entity_type(value_type.value)
-    if code != code.strip():
-        entity = storage_manager().find(api_entity_model(storage_type.value), code)
-        if entity is not None:
-            return entity
-    return find_entity(storage_type, code.strip())
 
 
 def create_response(

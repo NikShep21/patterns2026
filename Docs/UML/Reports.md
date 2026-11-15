@@ -187,15 +187,17 @@ sequenceDiagram
     else Используется формат из настроек
         Client->>API: GET /api/reports/{value_type}/{code}
     end
-    API->>API: преобразовать entity_type в storage_entity_type
-    API->>Storage: find(storage_entity_type, code)
+    API->>API: найти класс модели по имени типа
+    API->>Storage: find(model, code)
+    Storage-->>API: сущность или None
+    opt Запись не найдена и у кода есть внешние пробелы
+        API->>Storage: find(model, code.strip())
+        Storage-->>API: сущность или None
+    end
 
     alt Сущность не найдена
-        Storage-->>API: None
         API-->>Client: 404 Not Found
     else Сущность найдена
-        Storage-->>API: entity
-
         alt Формат указан в адресе
             API->>Factory: create(format)
         else Используется формат из настроек
