@@ -4,7 +4,6 @@ from Src.Core.Exceptions import operation_error
 from Src.Core.Validator import validator
 from Src.Core.abstract_manager import abstract_manager
 from Src.Logics.deserialize_factory import deserialize_factory
-from Src.Models.organization_model import organization_model
 from Src.Models.settings_model import settings_model
 
 
@@ -49,30 +48,9 @@ class settings_manager(abstract_manager):
 
     def convert(self) -> bool:
         """Преобразует загруженные данные в модель настроек."""
-        validator.validate_type(self._data, dict, "Настройки")
-        organization_data = self._data.get("organization", {})
-        validator.validate_type(
-            organization_data,
-            dict,
-            "Организация",
-        )
-
-        source = {
-            field: self._data[field]
-            for field in settings_model.settings_fields
-            if field in self._data
-        }
-        organization_fields = {
-            field: organization_data[field]
-            for field in organization_model.settings_fields
-            if field in organization_data
-        }
-        source["model_type"] = settings_model.__name__
-        source["organization"] = {
-            **organization_fields,
-            "model_type": organization_model.__name__,
-        }
-        self.__settings = deserialize_factory().deserialize(source, generate_ids=True)
+        settings = deserialize_factory().deserialize(self._data, generate_ids=True)
+        validator.validate_type(settings, settings_model, "Настройки")
+        self.__settings = settings
         return True
 
     @property

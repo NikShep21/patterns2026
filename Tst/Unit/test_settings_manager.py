@@ -126,7 +126,7 @@ def test_success_settings_manager_loads_without_optional_fields(monkeypatch):
     """Проверяет загрузку настроек при отсутствии необязательных полей."""
     # Подготовка
     manager = settings_manager()
-    data = {"extra": {"unused": True}}
+    data = {"model_type": "settings_model"}
     monkeypatch.setattr(
         "builtins.open",
         lambda *args, **kwargs: StringIO(
@@ -169,7 +169,7 @@ def test_success_settings_manager_loads_supported_response_formats(
     """Проверяет загрузку всех поддерживаемых форматов ответа."""
     # Подготовка
     manager = settings_manager()
-    data = {"response_format": value}
+    data = {"model_type": "settings_model", "response_format": value}
     monkeypatch.setattr(
         "builtins.open",
         lambda *args, **kwargs: StringIO(
@@ -208,7 +208,9 @@ def test_fail_settings_manager_invalid_first_start_raises_operation_error(
     # Подготовка
     manager = settings_manager()
     data = {
+        "model_type": "settings_model",
         "organization": {
+            "model_type": "organization_model",
             "name": "ООО Ромашка",
             "inn": "7707083893",
             "bik": "044525225",
@@ -234,13 +236,29 @@ def test_fail_settings_manager_invalid_first_start_raises_operation_error(
     assert manager.is_loaded is False
 
 
+def test_fail_settings_manager_rejects_another_model_as_settings(monkeypatch):
+    """Проверяет, что модель организации нельзя загрузить вместо настроек."""
+    # Подготовка
+    manager = settings_manager()
+    monkeypatch.setattr(
+        "builtins.open",
+        lambda *args, **kwargs: StringIO('{"model_type": "organization_model"}'),
+    )
+
+    # Действие и проверка
+    with pytest.raises(operation_error, match="Настройки"):
+        manager.load("invalid-settings-model.json")
+
+    assert manager.is_loaded is False
+
+
 def test_fail_settings_manager_invalid_response_format_raises_operation_error(
     monkeypatch,
 ):
     """Проверяет ошибку при неизвестном формате ответа."""
     # Подготовка
     manager = settings_manager()
-    data = {"response_format": "PDF"}
+    data = {"model_type": "settings_model", "response_format": "PDF"}
     monkeypatch.setattr(
         "builtins.open",
         lambda *args, **kwargs: StringIO(

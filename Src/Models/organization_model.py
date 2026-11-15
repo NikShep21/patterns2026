@@ -44,7 +44,7 @@ class organization_model(base_entity):
         for field in cls.settings_fields:
             if field in data:
                 setattr(organization, field, data[field])
-        organization._restore_id(data["id"])
+        organization._restore_id(data.get("id"))
         return organization
 
     @property

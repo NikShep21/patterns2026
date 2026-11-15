@@ -22,14 +22,15 @@ class settings_model(base_entity):
     def from_dict(cls, data: dict) -> "settings_model":
         """Восстанавливает настройки и загруженную карточку организации."""
         settings = cls()
-        settings.organization = data["organization"]
+        if "organization" in data:
+            settings.organization = data["organization"]
         for field in cls.settings_fields:
             if field in data:
                 value = data[field]
                 if field == "response_format":
                     value = report_format.from_string(value)
                 setattr(settings, field, value)
-        settings._restore_id(data["id"])
+        settings._restore_id(data.get("id"))
         return settings
 
     @property

@@ -117,9 +117,11 @@ sequenceDiagram
     else JSON загружен
         File-->>Manager: словарь данных
         Manager->>Manager: convert()
-        Manager->>Factory: deserialize(source, generate_ids=True)
-        Factory->>Organization: from_dict(fields)
-        Organization-->>Factory: объект организации
+        Manager->>Factory: deserialize(_data, generate_ids=True)
+        opt Организация указана в settings.json
+            Factory->>Organization: from_dict(fields)
+            Organization-->>Factory: объект организации
+        end
         Factory->>Settings: from_dict(fields)
         Settings-->>Factory: объект настроек
         Factory-->>Manager: объект настроек
