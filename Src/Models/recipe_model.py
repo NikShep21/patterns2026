@@ -9,6 +9,8 @@ from Src.Models.recipe_ingredient_model import recipe_ingredient_model
 class recipe_model(base_entity):
     """Модель технологической карты приготовления блюда."""
 
+    api_name = "recipe"
+
     _allowed_result_types = (
         nomenclature_type.SEMI_FINISHED,
         nomenclature_type.DISH,

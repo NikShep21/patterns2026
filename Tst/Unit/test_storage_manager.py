@@ -7,7 +7,7 @@ from Src.Models.nomenclature_group_model import nomenclature_group_model
 from Src.Models.nomenclature_model import nomenclature_model
 from Src.Models.nomenclature_type import nomenclature_type
 from Src.Models.range_model import range_model
-from Src.Models.storage_entity_type import storage_entity_type
+from Src.Models.recipe_model import recipe_model
 from Src.Models.warehouse_model import warehouse_model
 
 
@@ -169,18 +169,18 @@ def test_success_storage_loads_settings_when_needed(loaded_managers):
 
 
 @pytest.mark.parametrize(
-    ("value_type", "collection_name"),
+    ("model", "collection_name"),
     (
-        (storage_entity_type.NOMENCLATURE, "nomenclature"),
-        (storage_entity_type.RANGE, "ranges"),
-        (storage_entity_type.RECIPE, "recipes"),
-        (storage_entity_type.GROUP, "groups"),
-        (storage_entity_type.WAREHOUSE, "warehouses"),
+        (nomenclature_model, "nomenclature"),
+        (range_model, "ranges"),
+        (recipe_model, "recipes"),
+        (nomenclature_group_model, "groups"),
+        (warehouse_model, "warehouses"),
     ),
 )
 def test_success_storage_find_returns_entity_by_type_and_code(
     loaded_managers,
-    value_type,
+    model,
     collection_name,
 ):
     """Проверяет поиск поддерживаемых сущностей по коду."""
@@ -191,7 +191,7 @@ def test_success_storage_find_returns_entity_by_type_and_code(
     entity = getattr(storage, collection_name)[0]
 
     # Действие
-    result = storage.find(value_type, entity.id)
+    result = storage.find(model, entity.id)
 
     # Проверка
     assert result is entity
@@ -205,22 +205,23 @@ def test_success_storage_find_unknown_code_returns_none(loaded_managers):
     storage.load()
 
     # Действие
-    result = storage.find(storage_entity_type.RECIPE, "unknown-code")
+    result = storage.find(recipe_model, "unknown-code")
 
     # Проверка
     assert result is None
 
 
 @pytest.mark.parametrize(
-    ("value_type", "code"),
+    ("model", "code"),
     (
         ("recipe", "code"),
-        (storage_entity_type.RECIPE, ""),
+        (str, "code"),
+        (recipe_model, ""),
     ),
 )
 def test_fail_storage_find_invalid_arguments_raises_validation_error(
     loaded_managers,
-    value_type,
+    model,
     code,
 ):
     """Проверяет валидацию параметров поиска сущности."""
@@ -229,7 +230,7 @@ def test_fail_storage_find_invalid_arguments_raises_validation_error(
 
     # Действие / Проверка
     with pytest.raises(validation_error):
-        storage.find(value_type, code)
+        storage.find(model, code)
 
 
 def test_success_add_models_places_them_in_corresponding_collections(

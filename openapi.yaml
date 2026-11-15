@@ -370,10 +370,10 @@ components:
     storage_entity_type:
       type: string
       enum:
-      - range
       - group
       - nomenclature
-      - warehouse
+      - range
       - recipe
+      - warehouse
       title: storage_entity_type
       description: Определяет коллекции, доступные для CRUD.

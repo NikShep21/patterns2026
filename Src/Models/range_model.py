@@ -5,6 +5,8 @@ from Src.Core.Validator import validator
 class range_model(base_entity):
     """Модель единицы измерения."""
 
+    api_name = "range"
+
     def __init__(
         self,
         name: str,

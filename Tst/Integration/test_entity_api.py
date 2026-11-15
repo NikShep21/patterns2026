@@ -69,6 +69,37 @@ def test_success_entity_api_creates_reads_updates_and_deletes(entity_api, kind):
     assert client.delete(url).status_code == 404
 
 
+def test_success_entity_api_tracks_group_references_after_move_and_delete(entity_api):
+    """Проверяет обновление входящих ссылок при переносе и удалении номенклатуры."""
+    # Подготовка
+    client, storage = entity_api
+    for name in ("Группа А", "Группа Б"):
+        assert client.post("/api/entities/group", json={"name": name}).status_code == 201
+    first, second = storage.groups[-2:]
+    first_url = f"/api/entities/group/{first.id}"
+    second_url = f"/api/entities/group/{second.id}"
+    response = client.post(
+        "/api/entities/nomenclature",
+        json={
+            "name": "Новый товар",
+            "full_name": "Новый товар",
+            "type": "Сырьё",
+            "group": {"id": first.id},
+            "range": {"id": storage.ranges[0].id},
+        },
+    )
+    assert response.status_code == 201
+    item_url = f"/api/entities/nomenclature/{response.json()['id']}"
+    assert client.delete(first_url).status_code == 409
+
+    # Действие и проверка
+    assert client.patch(item_url, json={"group": {"id": second.id}}).status_code == 200
+    assert client.delete(first_url).status_code == 204
+    assert client.delete(second_url).status_code == 409
+    assert client.delete(item_url).status_code == 204
+    assert client.delete(second_url).status_code == 204
+
+
 def test_success_entity_api_preserves_links_when_editing_group(entity_api):
     """Разрешает обычную правку связанной группы, сохраняя её в номенклатуре."""
     client, storage = entity_api

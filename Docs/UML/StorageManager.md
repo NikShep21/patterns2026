@@ -19,11 +19,8 @@ classDiagram
     class storage_manager {
         <<Singleton>>
         -storage_manager __instance
-        -list __ranges
-        -list __groups
-        -list __nomenclature
-        -list __warehouses
-        -list __recipes
+        -dict __collections
+        -dict __incoming
         +__new__() storage_manager
         +__init__() None
         +load(file_name: str) None
@@ -34,18 +31,28 @@ classDiagram
         +add_warehouse(value: warehouse_model) None
         +add_recipe(value: recipe_model) None
         +clear() None
-        +find(value_type: storage_entity_type, code: str) base_entity_or_None
-        +entities(value_type: storage_entity_type) tuple
-        +create_entity(value_type, data: dict) base_entity
-        +update_entity(value_type, code: str, data: dict) base_entity
-        +delete_entity(value_type, code: str) None
+        +find(model: type, code: str) base_entity_or_None
+        +entities(model: type) tuple
+        +all_entities() tuple
+        +add(model: type, value: base_entity) None
+        +apply_update(current: base_entity, replacement: base_entity) None
+        +remove(model: type, value: base_entity) None
+        +iter_referrers(target: base_entity) Iterator
         +ranges tuple
         +groups tuple
         +nomenclature tuple
         +warehouses tuple
         +recipes tuple
-        -__add_unique(collection, value, expected_type, field_name) None
+        -__add_unique(value, expected_type, field_name) None
         -__create_initial_data() None
+    }
+
+    class entity_service {
+        +list_entities(model: type) tuple
+        +get(model: type, code: str) base_entity
+        +create(model: type, data: dict) base_entity
+        +update(model: type, code: str, data: dict) base_entity
+        +delete(model: type, code: str) None
     }
 
     class settings_manager {
@@ -119,15 +126,6 @@ classDiagram
     class operation_error
     class validation_error
 
-    class storage_entity_type {
-        <<enumeration>>
-        NOMENCLATURE
-        RANGE
-        RECIPE
-        GROUP
-        WAREHOUSE
-    }
-
     class deserialize_factory
 
     abstract_manager <|-- storage_manager
@@ -138,8 +136,8 @@ classDiagram
     storage_manager o-- "0..*" nomenclature_model : nomenclature
     storage_manager o-- "0..*" warehouse_model : warehouses
     storage_manager o-- "0..*" recipe_model : recipes
-    storage_manager ..> storage_entity_type : выбирает коллекцию
-    storage_manager ..> deserialize_factory : создаёт модель для CRUD
+    entity_service --> storage_manager : читает и меняет записи
+    entity_service ..> deserialize_factory : создаёт модель для CRUD
     nomenclature_model --> nomenclature_group_model : group
     nomenclature_model --> range_model : range
     nomenclature_model --> nomenclature_type : type

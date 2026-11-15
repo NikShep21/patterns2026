@@ -9,6 +9,8 @@ from Src.Models.range_model import range_model
 class nomenclature_model(base_entity):
     """Модель номенклатуры."""
 
+    api_name = "nomenclature"
+
     _max_full_name_length = 255
 
     def __init__(

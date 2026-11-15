@@ -6,6 +6,7 @@ from fastapi import FastAPI, HTTPException, Response
 from fastapi.responses import JSONResponse
 
 from Src.api_docs import entity_body, entity_errors, report_responses
+from Src.api_entity_types import api_entity_model, storage_entity_type
 from Src.Core.Exceptions import (
     application_error,
     entity_conflict_error,
@@ -13,12 +14,12 @@ from Src.Core.Exceptions import (
 )
 from Src.Dtos.report_result_dto import report_result_dto
 from Src.Logics.convert_factory import convert_factory
+from Src.Logics.entity_service import entity_service
 from Src.Logics.report_factory import report_factory
 from Src.Logics.settings_manager import settings_manager
 from Src.Logics.storage_manager import storage_manager
 from Src.Models.entity_type import entity_type
 from Src.Models.report_format import report_format
-from Src.Models.storage_entity_type import storage_entity_type
 
 
 @asynccontextmanager
@@ -56,7 +57,7 @@ async def handle_application_error(_, error: application_error):
 
 def find_entity(value_type: storage_entity_type, code: str):
     """Возвращает сущность указанного типа или сообщает об отсутствии."""
-    entity = storage_manager().find(value_type, code)
+    entity = storage_manager().find(api_entity_model(value_type.value), code)
 
     if entity is None:
         raise HTTPException(
@@ -74,7 +75,7 @@ def find_report_entity(value_type: entity_type, code: str):
     """Ищет запись по коду из отчёта с учётом прежней обработки пробелов."""
     storage_type = storage_entity_type(value_type.value)
     if code != code.strip():
-        entity = storage_manager().find(storage_type, code)
+        entity = storage_manager().find(api_entity_model(storage_type.value), code)
         if entity is not None:
             return entity
     return find_entity(storage_type, code.strip())
@@ -155,7 +156,8 @@ def get_default_report(
 async def list_entities(value_type: storage_entity_type) -> list[dict]:
     """Возвращает все записи выбранной коллекции."""
     serializer = convert_factory()
-    return [serializer.convert(entity) for entity in storage_manager().entities(value_type)]
+    entities = entity_service(storage_manager()).list_entities(api_entity_model(value_type.value))
+    return [serializer.convert(entity) for entity in entities]
 
 
 @app.get(
@@ -165,7 +167,8 @@ async def list_entities(value_type: storage_entity_type) -> list[dict]:
 )
 async def get_entity(value_type: storage_entity_type, code: str) -> dict:
     """Возвращает запись по коду."""
-    return convert_factory().convert(find_entity(value_type, code))
+    entity = entity_service(storage_manager()).get(api_entity_model(value_type.value), code)
+    return convert_factory().convert(entity)
 
 
 @app.post(
@@ -176,7 +179,8 @@ async def get_entity(value_type: storage_entity_type, code: str) -> dict:
 )
 async def create_entity(value_type: storage_entity_type, data: entity_body) -> dict:
     """Проверяет данные и создаёт запись."""
-    return convert_factory().convert(storage_manager().create_entity(value_type, data))
+    entity = entity_service(storage_manager()).create(api_entity_model(value_type.value), data)
+    return convert_factory().convert(entity)
 
 
 @app.patch(
@@ -186,7 +190,8 @@ async def create_entity(value_type: storage_entity_type, data: entity_body) -> d
 )
 async def update_entity(value_type: storage_entity_type, code: str, data: entity_body) -> dict:
     """Обновляет переданные поля записи."""
-    return convert_factory().convert(storage_manager().update_entity(value_type, code, data))
+    entity = entity_service(storage_manager()).update(api_entity_model(value_type.value), code, data)
+    return convert_factory().convert(entity)
 
 
 @app.delete(
@@ -197,7 +202,7 @@ async def update_entity(value_type: storage_entity_type, code: str, data: entity
 )
 async def delete_entity(value_type: storage_entity_type, code: str) -> None:
     """Удаляет запись, если на неё не ссылаются другие сущности."""
-    storage_manager().delete_entity(value_type, code)
+    entity_service(storage_manager()).delete(api_entity_model(value_type.value), code)
 
 
 if __name__ == "__main__":

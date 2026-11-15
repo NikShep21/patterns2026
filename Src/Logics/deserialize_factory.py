@@ -17,7 +17,7 @@ _loaded_models = dict[str, tuple[dict | None, base_entity | None]]
 
 
 @cache
-def _discover_models() -> dict[str, type[base_entity]]:
+def discover_models() -> dict[str, type[base_entity]]:
     """Находит конкретные модели с методом from_dict в пакете Src.Models."""
     models = {}
     for module_info in iter_modules(Models.__path__, prefix=f"{Models.__name__}."):
@@ -31,6 +31,15 @@ def _discover_models() -> dict[str, type[base_entity]]:
             ):
                 models[model.__name__] = model
     return models
+
+
+def resolve_model(model_type: str) -> type[base_entity]:
+    """Возвращает зарегистрированный класс по имени модели."""
+    validator.validate_required_string(model_type, "model_type")
+    model = discover_models().get(model_type)
+    if model is None:
+        raise validation_error(f"Неизвестный тип модели «{model_type}»")
+    return model
 
 
 class deserialize_factory:
@@ -85,12 +94,7 @@ class deserialize_factory:
                 raise validation_error(f"Ссылка на неизвестную модель «{code}»")
             return entity
 
-        model_type = source.get("model_type")
-        validator.validate_required_string(model_type, "model_type")
-
-        model = _discover_models().get(model_type)
-        if model is None:
-            raise validation_error(f"Неизвестный тип модели «{model_type}»")
+        model = resolve_model(source.get("model_type"))
 
         if generate_ids and "id" not in source:
             source = {"id": str(uuid4()), **source}
