@@ -5,6 +5,8 @@ from Src.Core.Validator import validator
 class range_model(base_entity):
     """Модель единицы измерения."""
 
+    api_name = "range"
+
     def __init__(
         self,
         name: str,
@@ -64,6 +66,10 @@ class range_model(base_entity):
     def base_range(self) -> "range_model | None":
         """Возвращает базовую единицу или None, если единица уже базовая."""
         return self.__base_range
+
+    def references(self) -> tuple[base_entity, ...]:
+        """Возвращает базовую единицу, если она задана."""
+        return () if self.base_range is None else (self.base_range,)
 
     @base_range.setter
     def base_range(self, value: "range_model | None"):

@@ -9,6 +9,8 @@ from Src.Models.range_model import range_model
 class nomenclature_model(base_entity):
     """Модель номенклатуры."""
 
+    api_name = "nomenclature"
+
     _max_full_name_length = 255
 
     def __init__(
@@ -49,6 +51,10 @@ class nomenclature_model(base_entity):
     def full_name(self) -> str:
         """Возвращает полное наименование номенклатуры."""
         return self.__full_name
+
+    def references(self) -> tuple[base_entity, ...]:
+        """Возвращает группу и единицу измерения."""
+        return self.group, self.range
 
     @full_name.setter
     def full_name(self, value: str):
