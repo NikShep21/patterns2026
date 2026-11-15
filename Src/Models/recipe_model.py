@@ -64,6 +64,18 @@ class recipe_model(base_entity):
                 "только полуфабрикат или блюдо"
             )
 
+    def validate_entity_update(self, current: base_entity, replacement: base_entity) -> None:
+        """Проверяет, что изменение связанной записи допустимо для карты."""
+        if isinstance(replacement, nomenclature_model) and self.result is current:
+            self.validate_replacement(replacement)
+
+        if isinstance(replacement, recipe_model):
+            for ingredient in self.ingredients:
+                if ingredient.recipe is current and replacement.result is not ingredient.nomenclature:
+                    raise validation_error(
+                        "Результат вложенной карты должен совпадать с номенклатурой ингредиента"
+                    )
+
     @property
     def result(self) -> nomenclature_model:
         """Возвращает номенклатуру готового блюда."""

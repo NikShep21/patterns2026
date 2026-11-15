@@ -57,6 +57,7 @@ classDiagram
         +net_weight number
         +add_ingredient(value: recipe_ingredient_model) None
         +remove_ingredient(value: recipe_ingredient_model) None
+        +validate_entity_update(current: base_entity, replacement: base_entity) None
     }
 
     base_entity <|-- recipe_ingredient_model

@@ -107,13 +107,10 @@ class entity_service:
         for recipe in self.__storage.iter_referrers(current):
             if not isinstance(recipe, recipe_model):
                 continue
-            if recipe.result is current:
-                recipe.validate_replacement(replacement)
-            for ingredient in recipe.ingredients:
-                if ingredient.recipe is current and replacement.result is not ingredient.nomenclature:
-                    raise entity_conflict_error(
-                        "Результат вложенной карты должен совпадать с номенклатурой ингредиента"
-                    )
+            try:
+                recipe.validate_entity_update(current, replacement)
+            except validation_error as error:
+                raise entity_conflict_error(str(error)) from error
 
     @staticmethod
     def __validate_name(

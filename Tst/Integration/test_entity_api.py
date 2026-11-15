@@ -130,6 +130,41 @@ def test_fail_entity_api_blocks_deletion_and_id_change_with_references(entity_ap
     assert client.get(url).json() == before
 
 
+def test_fail_entity_api_rejects_packaging_as_existing_recipe_result(entity_api):
+    """Проверяет конфликт при смене типа результата существующей карты."""
+    # Подготовка
+    client, storage = entity_api
+    result = storage.recipes[-1].result
+    url = f"/api/entities/nomenclature/{result.id}"
+    before = client.get(url).json()
+
+    # Действие
+    response = client.patch(url, json={"type": "Упаковка"})
+
+    # Проверка
+    assert response.status_code == 409
+    assert "Результатом технологической карты" in response.json()["detail"]
+    assert client.get(url).json() == before
+
+
+def test_fail_entity_api_rejects_incompatible_nested_recipe_result(entity_api):
+    """Проверяет конфликт при смене результата вложенной карты."""
+    # Подготовка
+    client, storage = entity_api
+    parent = storage.recipes[-1]
+    nested = parent.ingredients[0].recipe
+    url = f"/api/entities/recipe/{nested.id}"
+    before = client.get(url).json()
+
+    # Действие
+    response = client.patch(url, json={"result": {"id": parent.result.id}})
+
+    # Проверка
+    assert response.status_code == 409
+    assert "Результат вложенной карты" in response.json()["detail"]
+    assert client.get(url).json() == before
+
+
 def test_fail_entity_api_rejects_invalid_changes_without_modifying_storage(entity_api):
     """Сохраняет записи при неверной ссылке, цикле и недопустимом значении."""
     client, storage = entity_api
