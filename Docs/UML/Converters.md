@@ -149,6 +149,10 @@ classDiagram
         +from_dict(data: dict) organization_model
     }
 
+    class transaction_model {
+        +from_dict(data: dict) transaction_model
+    }
+
     base_entity <|-- range_model
     base_entity <|-- nomenclature_group_model
     base_entity <|-- nomenclature_model
@@ -157,6 +161,7 @@ classDiagram
     base_entity <|-- recipe_model
     base_entity <|-- settings_model
     base_entity <|-- organization_model
+    base_entity <|-- transaction_model
     deserialize_factory ..> range_model : from_dict
     deserialize_factory ..> nomenclature_group_model : from_dict
     deserialize_factory ..> nomenclature_model : from_dict
@@ -165,6 +170,7 @@ classDiagram
     deserialize_factory ..> recipe_model : from_dict
     deserialize_factory ..> settings_model : from_dict
     deserialize_factory ..> organization_model : from_dict
+    deserialize_factory ..> transaction_model : from_dict
 ```
 
 ### Загрузка выгрузки хранилища

@@ -19,7 +19,7 @@ class turnover_row_dto:
         income: float,
         expense: float,
     ):
-        """Сохраняет измерения строки и проверяет конечность расчёта."""
+        """Сохраняет данные строки и проверяет результат расчёта."""
         self.__warehouse = report_reference_dto(warehouse.id, warehouse.name)
         self.__nomenclature = report_reference_dto(nomenclature.id, nomenclature.name)
         self.__range = report_reference_dto(range.id, range.name)

@@ -43,6 +43,7 @@ classDiagram
         +nomenclature tuple
         +warehouses tuple
         +recipes tuple
+        +transactions tuple
         -__add_unique(value, expected_type, field_name) None
         -__create_initial_data() None
     }
@@ -98,6 +99,16 @@ classDiagram
         +address str
     }
 
+    class transaction_model {
+        +nomenclature nomenclature_model
+        +warehouse warehouse_model
+        +range range_model
+        +quantity number
+        +period datetime
+        +from_dict(data: dict) transaction_model
+        +references() tuple
+    }
+
     class recipe_ingredient_model {
         +nomenclature nomenclature_model
         +quantity number
@@ -137,6 +148,10 @@ classDiagram
     storage_manager o-- "0..*" nomenclature_model : nomenclature
     storage_manager o-- "0..*" warehouse_model : warehouses
     storage_manager o-- "0..*" recipe_model : recipes
+    storage_manager o-- "0..*" transaction_model : transactions
+    transaction_model --> nomenclature_model : nomenclature
+    transaction_model --> warehouse_model : warehouse
+    transaction_model --> range_model : range
     entity_service --> storage_manager : читает и меняет записи
     entity_service ..> deserialize_factory : создаёт модель для CRUD
     nomenclature_model --> nomenclature_group_model : group
@@ -180,6 +195,8 @@ sequenceDiagram
         Storage->>Storage: add_range() и add_group()
         Storage->>Models: создать номенклатуру и склад
         Storage->>Storage: add_nomenclature() и add_warehouse()
+        Storage->>Models: создать тестовые приходы и расходы
+        Storage->>Storage: add(transaction_model, movement)
         Storage->>Models: создать технологическую карту блинов
         Storage->>Storage: add_recipe()
     else is_first_start = false

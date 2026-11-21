@@ -60,7 +60,7 @@ app = FastAPI(
 
 @app.exception_handler(RequestValidationError)
 async def handle_request_validation_error(_, error: RequestValidationError):
-    """Возвращает 422 даже для неконечных чисел во входных ошибочных данных."""
+    """Возвращает ошибки проверки запроса в формате JSON."""
     details = jsonable_encoder(
         error.errors(),
         custom_encoder={float: lambda value: value if isfinite(value) else str(value)},

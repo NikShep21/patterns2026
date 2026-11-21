@@ -48,7 +48,7 @@ class property_path:
 
     @classmethod
     def __walk(cls, source: object, parts: list[str]):
-        """Проходит конечный путь; отсутствующая вложенная ссылка не совпадает."""
+        """Читает значения по вложенному пути."""
         if isinstance(source, (list, tuple)):
             for item in source:
                 yield from cls.__walk(item, parts)
