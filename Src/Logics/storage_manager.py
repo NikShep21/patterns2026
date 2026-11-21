@@ -1,4 +1,5 @@
 from collections.abc import Iterator
+from datetime import datetime, timezone
 from typing import TypeVar, cast
 
 from Src.Core.Abstract import base_entity
@@ -12,6 +13,7 @@ from Src.Models.nomenclature_type import nomenclature_type
 from Src.Models.range_model import range_model
 from Src.Models.recipe_ingredient_model import recipe_ingredient_model
 from Src.Models.recipe_model import recipe_model
+from Src.Models.transaction_model import transaction_model
 from Src.Models.warehouse_model import warehouse_model
 
 
@@ -207,6 +209,11 @@ class storage_manager(abstract_manager):
         """Возвращает технологические карты."""
         return self.entities(recipe_model)
 
+    @property
+    def transactions(self) -> tuple[transaction_model, ...]:
+        """Возвращает складские движения для расчёта остатков и оборотов."""
+        return self.entities(transaction_model)
+
     def __add_unique(
         self,
         value,
@@ -324,6 +331,24 @@ class storage_manager(abstract_manager):
         self.add_warehouse(
             warehouse_model("Основной склад", "ул. Центральная, д. 1")
         )
+        for item, quantity, day in (
+            (flour, 10, 1),
+            (flour, -2, 3),
+            (flour, 5, 5),
+            (milk, 10000, 1),
+            (milk, -1500, 4),
+            (sugar, 3000, 1),
+        ):
+            self.add(
+                transaction_model,
+                transaction_model(
+                    item,
+                    self.warehouses[0],
+                    item.range,
+                    quantity,
+                    datetime(2026, 11, day, 12, tzinfo=timezone.utc),
+                ),
+            )
         dough_recipe = recipe_model(
             "Тесто для блинов",
             dough,
