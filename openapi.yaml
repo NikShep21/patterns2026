@@ -199,6 +199,147 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/entities/{value_type}/filter:
+    post:
+      tags:
+      - Фильтрация
+      summary: Filter Entities
+      description: Отбирает записи по публичным полям, включая пути через вложенные
+        модели.
+      operationId: filter_entities_api_entities__value_type__filter_post
+      parameters:
+      - name: value_type
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/storage_entity_type'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                conditions:
+                  type: array
+                  items:
+                    type: object
+                    additionalProperties: false
+                    required:
+                    - field
+                    - value
+                    properties:
+                      field:
+                        type: string
+                        description: Публичное поле или вложенный путь.
+                      comparison:
+                        type: string
+                        enum:
+                        - EQUALS
+                        - LIKE
+                        default: EQUALS
+                      value:
+                        type:
+                        - string
+                        - number
+                        - boolean
+                        - 'null'
+                  default: []
+              title: Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response Filter Entities Api Entities  Value Type  Filter Post
+        '400':
+          description: Некорректные данные или ссылка
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/reports/turnover:
+    post:
+      tags:
+      - Отчёты
+      summary: Get Turnover
+      description: Формирует ОСВ с учётом фильтра и периода.
+      operationId: get_turnover_api_reports_turnover_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                conditions:
+                  type: array
+                  items:
+                    type: object
+                    additionalProperties: false
+                    required:
+                    - field
+                    - value
+                    properties:
+                      field:
+                        type: string
+                        description: Публичное поле или вложенный путь.
+                      comparison:
+                        type: string
+                        enum:
+                        - EQUALS
+                        - LIKE
+                        default: EQUALS
+                      value:
+                        type:
+                        - string
+                        - number
+                        - boolean
+                        - 'null'
+                  default: []
+                start:
+                  anyOf:
+                  - type: string
+                    format: date-time
+                  - type: 'null'
+                  description: Включённое начало периода. Время без пояса считается
+                    UTC.
+                end:
+                  anyOf:
+                  - type: string
+                    format: date-time
+                  - type: 'null'
+                  description: Включённое окончание периода. Время без пояса считается
+                    UTC.
+              title: Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response Get Turnover Api Reports Turnover Post
+        '400':
+          description: Некорректные данные или ссылка
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/entities/{value_type}/{code}:
     get:
       tags:

@@ -1,23 +1,36 @@
 from contextlib import asynccontextmanager
+from math import isfinite
 from urllib.parse import quote
 
 import uvicorn
 from fastapi import FastAPI, HTTPException, Response
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-from Src.api_docs import entity_body, entity_errors, report_responses
+from Src.api_docs import (
+    entity_body,
+    entity_errors,
+    filter_body,
+    report_responses,
+    turnover_body,
+)
 from Src.api_entity_types import api_entity_model, storage_entity_type
 from Src.Core.Exceptions import (
     application_error,
     entity_conflict_error,
     entity_not_found_error,
 )
+from Src.Dtos.filter_dto import filter_dto
 from Src.Dtos.report_result_dto import report_result_dto
+from Src.Dtos.turnover_filter_dto import turnover_filter_dto
 from Src.Logics.convert_factory import convert_factory
 from Src.Logics.entity_service import entity_service
+from Src.Logics.filter_service import filter_service
 from Src.Logics.report_factory import report_factory
 from Src.Logics.settings_manager import settings_manager
 from Src.Logics.storage_manager import storage_manager
+from Src.Logics.turnover_service import turnover_service
 from Src.Models.entity_type import entity_type
 from Src.Models.report_format import report_format
 
@@ -43,6 +56,17 @@ app = FastAPI(
     description="Отчёты и управление доменными сущностями",
     lifespan=lifespan,
 )
+
+
+@app.exception_handler(RequestValidationError)
+async def handle_request_validation_error(_, error: RequestValidationError):
+    """Возвращает 422 даже для неконечных чисел во входных ошибочных данных."""
+    details = jsonable_encoder(
+        error.errors(),
+        custom_encoder={float: lambda value: value if isfinite(value) else str(value)},
+    )
+    return JSONResponse(status_code=422, content={"detail": details})
+
 
 @app.exception_handler(application_error)
 async def handle_application_error(_, error: application_error):
@@ -153,6 +177,32 @@ async def list_entities(value_type: storage_entity_type) -> list[dict]:
     serializer = convert_factory()
     entities = entity_service(storage_manager()).list_entities(api_entity_model(value_type.value))
     return [serializer.convert(entity) for entity in entities]
+
+
+@app.post(
+    "/api/entities/{value_type}/filter",
+    tags=["Фильтрация"],
+    responses={400: entity_errors[400]},
+)
+def filter_entities(value_type: storage_entity_type, data: filter_body) -> list[dict]:
+    """Отбирает записи по публичным полям, включая пути через вложенные модели."""
+    selected = filter_service(storage_manager()).select(
+        api_entity_model(value_type.value), filter_dto.from_dict(data),
+    )
+    serializer = convert_factory()
+    return [serializer.convert(entity) for entity in selected.data]
+
+
+@app.post(
+    "/api/reports/turnover",
+    tags=["Отчёты"],
+    responses={400: entity_errors[400]},
+)
+def get_turnover(data: turnover_body) -> list[dict]:
+    """Формирует ОСВ с учётом фильтра и периода."""
+    rows = turnover_service(storage_manager()).build(turnover_filter_dto.from_dict(data))
+    serializer = convert_factory()
+    return [serializer.convert(row) for row in rows]
 
 
 @app.get(
