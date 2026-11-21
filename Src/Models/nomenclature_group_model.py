@@ -4,6 +4,8 @@ from Src.Core.Abstract import base_entity
 class nomenclature_group_model(base_entity):
     """Модель группы номенклатуры."""
 
+    api_name = "group"
+
     def __init__(self, name: str):
         """Инициализирует группу номенклатуры."""
         super().__init__()

@@ -50,3 +50,12 @@ class base_entity(ABC):
             return NotImplemented
 
         return self.id == other.id
+
+    def references(self) -> tuple["base_entity", ...]:
+        """Возвращает непосредственные ссылки на другие сущности."""
+        return ()
+
+    def replace_state(self, source: "base_entity") -> None:
+        """Переносит состояние проверенной модели, сохраняя объект."""
+        validator.validate_type(source, type(self), "Модель")
+        self.__dict__.update(vars(source))

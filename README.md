@@ -27,3 +27,6 @@
 pip install -r requirements.txt
 python main.py
 ```
+
+Swagger UI доступен по адресу [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
+Схема API из маршрутов FastAPI сохранена в [openapi.yaml](openapi.yaml).

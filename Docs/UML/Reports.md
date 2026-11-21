@@ -182,15 +182,22 @@ sequenceDiagram
     participant Flattener as report_data_flattener
     participant Result as report_result_dto
 
-    Client->>API: GET /api/reports/{format}/{type}/{code}
-    API->>Storage: find(type, code)
+    alt Формат указан в адресе
+        Client->>API: GET /api/reports/{response_format}/{value_type}/{code}
+    else Используется формат из настроек
+        Client->>API: GET /api/reports/{value_type}/{code}
+    end
+    API->>API: найти класс модели по имени типа
+    API->>Storage: find(model, code)
+    Storage-->>API: сущность или None
+    opt Запись не найдена и у кода есть внешние пробелы
+        API->>Storage: find(model, code.strip())
+        Storage-->>API: сущность или None
+    end
 
     alt Сущность не найдена
-        Storage-->>API: None
         API-->>Client: 404 Not Found
     else Сущность найдена
-        Storage-->>API: entity
-
         alt Формат указан в адресе
             API->>Factory: create(format)
         else Используется формат из настроек

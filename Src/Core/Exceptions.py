@@ -8,3 +8,11 @@ class validation_error(application_error):
 
 class operation_error(application_error):
     """Исключение, возникающее при ошибке выполнения операции."""
+
+
+class entity_conflict_error(application_error):
+    """Изменение конфликтует с существующей записью или связью."""
+
+
+class entity_not_found_error(application_error):
+    """Запись с указанным кодом отсутствует в коллекции."""

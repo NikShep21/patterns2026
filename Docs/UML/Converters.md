@@ -105,11 +105,10 @@ sequenceDiagram
 ```mermaid
 classDiagram
     class deserialize_factory {
-        -dict __models
         +load(file_name) dict
-        +deserialize(source: dict) base_entity
-        -__deserialize_model(source, loaded) base_entity
-        -__deserialize_value(value, loaded) object
+        +deserialize(source: dict, known, generate_ids: bool) base_entity
+        -__deserialize_model(source, loaded, allow_references, generate_ids) base_entity
+        -__deserialize_value(value, loaded, allow_references, generate_ids) object
     }
 
     class base_entity {
@@ -142,18 +141,30 @@ classDiagram
         +from_dict(data: dict) recipe_model
     }
 
+    class settings_model {
+        +from_dict(data: dict) settings_model
+    }
+
+    class organization_model {
+        +from_dict(data: dict) organization_model
+    }
+
     base_entity <|-- range_model
     base_entity <|-- nomenclature_group_model
     base_entity <|-- nomenclature_model
     base_entity <|-- warehouse_model
     base_entity <|-- recipe_ingredient_model
     base_entity <|-- recipe_model
+    base_entity <|-- settings_model
+    base_entity <|-- organization_model
     deserialize_factory ..> range_model : from_dict
     deserialize_factory ..> nomenclature_group_model : from_dict
     deserialize_factory ..> nomenclature_model : from_dict
     deserialize_factory ..> warehouse_model : from_dict
     deserialize_factory ..> recipe_ingredient_model : from_dict
     deserialize_factory ..> recipe_model : from_dict
+    deserialize_factory ..> settings_model : from_dict
+    deserialize_factory ..> organization_model : from_dict
 ```
 
 ### Загрузка выгрузки хранилища
@@ -176,7 +187,7 @@ sequenceDiagram
         Note over Factory: Элементы списков обрабатываются по одному
         opt Значение является словарём модели
             Factory->>Factory: __deserialize_model(source, loaded)
-            Factory->>Factory: найти класс по model_type и проверить ID
+            Factory->>Factory: найти класс в реестре моделей и проверить ID
             alt ID загружен и данные совпадают
                 Factory->>Factory: взять готовый объект из loaded
             else ID ещё не встречался

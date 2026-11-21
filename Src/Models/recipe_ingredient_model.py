@@ -111,6 +111,12 @@ class recipe_ingredient_model(base_entity):
         """Возвращает технологическую карту полуфабриката."""
         return self.__recipe
 
+    def references(self) -> tuple[base_entity, ...]:
+        """Возвращает номенклатуру и связанную технологическую карту."""
+        if self.recipe is None:
+            return (self.nomenclature,)
+        return self.nomenclature, self.recipe
+
     @property
     def gross_weight(self) -> int | float:
         """Возвращает вес ингредиента до первичной обработки."""

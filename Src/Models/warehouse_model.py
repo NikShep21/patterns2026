@@ -5,6 +5,8 @@ from Src.Core.Validator import validator
 class warehouse_model(base_entity):
     """Модель склада."""
 
+    api_name = "warehouse"
+
     def __init__(self, name: str, address: str):
         """Инициализирует склад."""
         super().__init__()

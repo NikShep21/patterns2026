@@ -1,5 +1,7 @@
 {
+  "model_type": "settings_model",
   "organization": {
+    "model_type": "organization_model",
     "name": "ООО Ромашка",
     "inn": "7707083893",
     "bik": "044525225",
